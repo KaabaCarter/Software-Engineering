@@ -1,5 +1,7 @@
 """
 Ani Washington
+Kaaba Carter
+
 
 Wizard Duel - a simple 2D local 2-player fighting game (Pygame prototype).
 
