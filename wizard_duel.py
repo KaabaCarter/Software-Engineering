@@ -1,6 +1,7 @@
 """
 Ani Washington
 Kaaba Carter
+Youmbo Fatima Ane
 
 
 Wizard Duel - a simple 2D local 2-player fighting game (Pygame prototype).
