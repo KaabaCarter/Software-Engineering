@@ -1,15 +1,10 @@
 """
-Ani Washington
-Kaaba Carter
-Youmbo Fatima Ane
-
-
 Wizard Duel - a simple 2D local 2-player fighting game (Pygame prototype).
 
-Run:  pip install pygame-ce
+Run:  pip install pygame
       python wizard_duel.py
 
-We can update the characters later but for now I put them as shapes
+Characters are drawn with basic shapes for now. Swap in sprites later.
 """
 import sys
 import pygame
