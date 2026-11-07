@@ -102,6 +102,7 @@ STAR_GOLD = hx("#F5C542")
 SPARK = hx("#FFE680")
 SHIELD_FILL = hx("#9FD3FF")
 SHIELD_RIM = hx("#CFEBFF")
+SHIELD_EDGE = None      # extra dark ring, set in Day mode so the shield shows on light walls
 
 
 # ---------------- Geometry helpers ----------------
@@ -290,6 +291,8 @@ def draw_wizard(surf, look_name, pose_name, x, y, facing=1, scale=1.0,
         pen.circle([], 25, 50, 62, with_alpha(SHIELD_FILL, 0.2))
         cx, cy = pen.pt([], 25, 50)
         pygame.draw.circle(surf, SHIELD_RIM, (cx, cy), round(62 * scale), max(2, round(2.5 * scale)))
+        if SHIELD_EDGE:
+            pygame.draw.circle(surf, SHIELD_EDGE, (cx, cy), round(64 * scale), max(1, round(1.5 * scale)))
         a0, a1 = math.atan2(14 - 50, -22 - 25), math.atan2(-7 - 50, 16 - 25)
         glint = [(25 + 58 * math.cos(a0 + (a1 - a0) * k / 8), 50 + 58 * math.sin(a0 + (a1 - a0) * k / 8))
                  for k in range(9)]

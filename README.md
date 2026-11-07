@@ -56,6 +56,12 @@ they recharge and glow when ready. Press **Tab** to hide or show it.
 
 **Esc** pauses the match; while paused, **Q** quits to the menu.
 
+## Night and Day
+
+Press **L** on the main menu or in the pause menu to switch between **Night**
+(a candlelit hall) and **Day** (the same hall in sunlight, with light panels).
+The game remembers your choice in `settings.json` (not committed to git).
+
 ## Wizards
 
 | Wizard  | Colors          | Speed | Spell power | Health |
@@ -85,7 +91,7 @@ On the character select screen, use your left/right keys to browse wizards.
 
 ## Tweaking the game
 
-All colors live in `THEME` at the top of `scene_art.py` (wizard colors are
+All colors live in `THEMES` (one set for Night, one for Day) at the top of `scene_art.py` (wizard colors are
 in `LOOKS` in `wizard_art.py`). All gameplay values live at the top of `wizard_duel.py`: screen size, gravity,
 jump speed, rounds to win, health, damage, block reduction, and the
 `WIZARDS`, `SPELLS` and `CONTROLS` tables.

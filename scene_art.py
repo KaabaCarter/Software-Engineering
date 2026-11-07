@@ -11,21 +11,58 @@ import pygame
 from pygame import gfxdraw
 from wizard_art import hx, star_points
 
-# ---------------- Theme ----------------
-# Dark, rich world; only what the players must read (wizards, spells, UI) is bright.
-THEME = {k: hx(v) for k, v in {
-    "sky_top": "#07060F", "sky_bottom": "#1A1430",
-    "pillar": "#120E20", "pillar_edge": "#1B1530",
-    "window_frame": "#2A2140", "window": "#E9A24A", "window_core": "#F7D58A",
-    "floor": "#1C1726", "floor_edge": "#4B3F5C", "floor_line": "#14101C",
-    "candle": "#EFE3C8", "flame": "#FFD27A",
-    "gold": "#D9A73E", "gold_bright": "#F2C14E",
-    "parchment": "#EFE3C8", "muted": "#A89DBB",
-    "panel": "#15112A", "panel_edge": "#3A3150", "bar_back": "#0B0914",
-    "key": "#2B2420", "key_edge": "#5A4E44", "key_lip": "#0F0C0A",
-    "stun": "#5FD0FF", "fire": "#FF8A1F", "fire_core": "#FFC23D", "fire_hot": "#FFF3C4",
-    "danger": "#FFB347",
-}.items()}
+# ---------------- Themes: Night and Day ----------------
+# Night: dark, rich hall; only what players must read is bright.
+# Day: the same hall in daylight, with light panels and dark text.
+# Colors are "#hex" strings; other values are settings.
+THEMES = {
+    "night": {
+        "sky_top": "#07060F", "sky_bottom": "#1A1430",
+        "pillar": "#120E20", "pillar_edge": "#1B1530",
+        "window_frame": "#2A2140", "window": "#E9A24A", "window_core": "#F7D58A",
+        "window_glow": "#E9A24A", "sunbeams": False,
+        "floor": "#1C1726", "floor_edge": "#4B3F5C", "floor_line": "#14101C",
+        "candle": "#EFE3C8", "flame": "#FFD27A", "dust": "#F7D58A",
+        "vignette": "#000000", "overlay": "#05040C", "shadow": "#000000",
+        "gold": "#D9A73E", "gold_bright": "#F2C14E", "heading": "#F2C14E",
+        "text": "#EFE3C8", "text_muted": "#A89DBB", "name_tint": "#FFFFFF",
+        "panel": "#15112A", "panel_edge": "#3A3150", "bar_back": "#0B0914",
+        "button_hi": "#EFE3C8", "button_hi_text": "#2B2420", "floor_shadow": "#080610",
+        "key": "#2B2420", "key_edge": "#5A4E44", "key_lip": "#0F0C0A", "key_text": "#EFE3C8",
+        "stun": "#5FD0FF", "fire": "#FF8A1F", "fire_core": "#FFC23D", "fire_hot": "#FFF3C4",
+        "spell_outline": False, "danger": "#FFB347", "lag": "#E9A24A", "pip_empty": "#0B0914",
+    },
+    "day": {
+        "sky_top": "#BFB2A0", "sky_bottom": "#E6DAC6",
+        "pillar": "#A89A87", "pillar_edge": "#95877A",
+        "window_frame": "#5A4636", "window": "#9CCDEB", "window_core": "#E4F4FF",
+        "window_glow": "#FFF6DA", "sunbeams": True,
+        "floor": "#8E8070", "floor_edge": "#5E5246", "floor_line": "#7C6F61",
+        "candle": "#F7EFDD", "flame": "#FFC75A", "dust": "#FFF8E8",
+        "vignette": "#3C2814", "overlay": "#F6EFE2", "shadow": None,
+        "gold": "#A87A1C", "gold_bright": "#C9952A", "heading": "#7A3E0B",
+        "text": "#2B2420", "text_muted": "#6B5E52", "name_tint": "#000000",
+        "panel": "#F5ECDA", "panel_edge": "#C9B79A", "bar_back": "#3A302A",
+        "button_hi": "#2B2420", "button_hi_text": "#F5ECDA", "floor_shadow": "#6E6253",
+        "key": "#2B2420", "key_edge": "#5A4E44", "key_lip": "#0F0C0A", "key_text": "#EFE3C8",
+        "stun": "#1E9FD8", "fire": "#F06A0A", "fire_core": "#FFB21F", "fire_hot": "#FFF0B8",
+        "spell_outline": True, "danger": "#D9480F", "lag": "#E9A24A", "pip_empty": "#F5ECDA",
+    },
+}
+THEME = {}          # the active theme; filled by set_theme()
+MODE = "night"
+
+
+def set_theme(name):
+    """Switch Night/Day. THEME is updated in place so every module sees it."""
+    global MODE
+    MODE = name
+    THEME.clear()
+    for k, v in THEMES[name].items():
+        THEME[k] = hx(v) if isinstance(v, str) else v
+
+
+set_theme("night")
 WHITE = (255, 255, 255)
 
 FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "fonts")
@@ -57,8 +94,8 @@ def rgba(rgb, alpha):
 def text(surf, s, font, color, pos, anchor="center", shadow=True):
     img = font.render(s, True, color)
     rect = img.get_rect(**{anchor: pos})
-    if shadow:
-        sh = font.render(s, True, (0, 0, 0))
+    if shadow and THEME["shadow"]:
+        sh = font.render(s, True, THEME["shadow"])
         sh.set_alpha(170)
         surf.blit(sh, rect.move(0, 2))
     surf.blit(img, rect)
@@ -93,8 +130,8 @@ def build_background(width, height, ground_y):
         pygame.draw.line(s, THEME["pillar_edge"], (x + 59, 0), (x + 59, ground_y), 2)
         for y in range(30, ground_y, 46):
             pygame.draw.line(s, THEME["sky_top"], (x, y), (x + 60, y), 1)
-    glow = radial_glow(150, THEME["window"], 70)
-    for x in WINDOW_XS:                                   # arched, candlelit windows
+    glow = radial_glow(150, THEME["window_glow"], 70)
+    for x in WINDOW_XS:                                   # arched windows and their light
         s.blit(glow, (x + 45 - 150, 190 - 150))
     for x in WINDOW_XS:
         pygame.draw.rect(s, THEME["window_frame"], (x - 6, 104, 102, 176),
@@ -109,9 +146,17 @@ def build_background(width, height, ground_y):
     pygame.draw.line(s, THEME["floor_edge"], (0, ground_y), (width, ground_y), 3)
     for x in range(0, width + 96, 96):
         pygame.draw.line(s, THEME["floor_line"], (x, ground_y + 3), (x - 30, height), 2)
+    if THEME["sunbeams"]:                                 # light falling from each window
+        beams = pygame.Surface((width, height), pygame.SRCALPHA)
+        for x in WINDOW_XS:
+            pygame.draw.polygon(beams, rgba(THEME["window_glow"], 46),
+                                [(x + 4, 200), (x + 86, 200), (x + 190, height), (x + 40, height)])
+        s.blit(beams, (0, 0))
     vignette = pygame.Surface((width, height), pygame.SRCALPHA)
+    strength = 6 if MODE == "night" else 3
     for k in range(36):
-        pygame.draw.rect(vignette, (0, 0, 0, 6), (k * 3, k * 2, width - k * 6, height - k * 4), 6)
+        pygame.draw.rect(vignette, rgba(THEME["vignette"], strength),
+                         (k * 3, k * 2, width - k * 6, height - k * 4), 6)
     s.blit(vignette, (0, 0))
     return s
 
@@ -145,7 +190,7 @@ class Ambient:
             flick = 3 + (self.tick // 6 + i) % 2
             gfxdraw.filled_circle(surf, cx, int(y) - 4, flick, THEME["flame"])
         for x, y, _ in self.dust:
-            gfxdraw.pixel(surf, int(x), int(y), rgba(THEME["window_core"], 120))
+            gfxdraw.pixel(surf, int(x), int(y), rgba(THEME["dust"], 140))
 
 
 # ---------------- Particles ----------------
@@ -190,6 +235,8 @@ def draw_stun_bolt(surf, x, y, direction, tick):
     gfxdraw.filled_circle(surf, int(x), int(y), 10, rgba(c, 140))
     gfxdraw.filled_circle(surf, int(x), int(y), 6, c)
     gfxdraw.filled_circle(surf, int(x), int(y), 3, WHITE)
+    if THEME["spell_outline"]:
+        gfxdraw.aacircle(surf, int(x), int(y), 10, mix(c, (0, 0, 0), 0.5))
     if tick % 4 < 2:
         pygame.draw.polygon(surf, WHITE, star_points(x + direction * 6, y - 9, 4))
 
@@ -204,6 +251,8 @@ def draw_fire_blast(surf, x, y, direction, tick):
     gfxdraw.filled_circle(surf, int(x), int(y), 15, THEME["fire"])
     gfxdraw.filled_circle(surf, int(x + direction * 2), int(y), 10, THEME["fire_core"])
     gfxdraw.filled_circle(surf, int(x + direction * 4), int(y - 1), 5, THEME["fire_hot"])
+    if THEME["spell_outline"]:
+        gfxdraw.aacircle(surf, int(x), int(y), 15, mix(THEME["fire"], (0, 0, 0), 0.5))
 
 
 def spawn_embers(fx, x, y, direction):
@@ -226,7 +275,7 @@ def keycap(surf, label, x, y, font, h=26, pressed=False, charge=None, glow=None)
     charge: 0..1 recharge fill for spells; glow: color of the fill / ready glow.
     Returns the keycap's width.
     """
-    img = None if label in ARROWS else font.render(label, True, THEME["parchment"])
+    img = None if label in ARROWS else font.render(label, True, THEME["key_text"])
     w = keycap_width(label, font, h)
     lip = 1 if pressed else 3
     top = y + (2 if pressed else 0)
@@ -251,8 +300,8 @@ def keycap(surf, label, x, y, font, h=26, pressed=False, charge=None, glow=None)
         pts = [(cx + r * math.cos(a), cy + r * math.sin(a)),
                (cx + r * math.cos(a + 2.4), cy + r * math.sin(a + 2.4)),
                (cx + r * math.cos(a - 2.4), cy + r * math.sin(a - 2.4))]
-        gfxdraw.aapolygon(surf, [(round(px), round(py)) for px, py in pts], THEME["parchment"])
-        gfxdraw.filled_polygon(surf, [(round(px), round(py)) for px, py in pts], THEME["parchment"])
+        gfxdraw.aapolygon(surf, [(round(px), round(py)) for px, py in pts], THEME["key_text"])
+        gfxdraw.filled_polygon(surf, [(round(px), round(py)) for px, py in pts], THEME["key_text"])
     return w
 
 
@@ -265,7 +314,7 @@ def panel(surf, rect, edge=None, fill=None, radius=12):
 
 def dim(surf, alpha):
     shade = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
-    shade.fill((5, 4, 12, alpha))
+    shade.fill(rgba(THEME["overlay"], alpha))
     surf.blit(shade, (0, 0))
 
 
@@ -274,13 +323,13 @@ def button(surf, rect, label, key, font, key_font, selected=False):
     rect = pygame.Rect(rect)
     if selected:
         pygame.draw.rect(surf, rgba(THEME["gold"], 60), rect.inflate(10, 10), border_radius=12)
-        pygame.draw.rect(surf, THEME["parchment"], rect, border_radius=9)
+        pygame.draw.rect(surf, THEME["button_hi"], rect, border_radius=9)
         pygame.draw.rect(surf, THEME["gold_bright"], rect, 2, border_radius=9)
-        color = THEME["key"]
+        color = THEME["button_hi_text"]
     else:
         pygame.draw.rect(surf, THEME["panel"], rect, border_radius=9)
         pygame.draw.rect(surf, THEME["panel_edge"], rect, 2, border_radius=9)
-        color = THEME["parchment"]
+        color = THEME["text"]
     img = font.render(label, True, color)
     surf.blit(img, img.get_rect(midleft=(rect.x + 20, rect.centery)))
     w = keycap_width(key, key_font, 28)

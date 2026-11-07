@@ -7,9 +7,12 @@ Run:  pip install pygame
 Wizard artwork lives in wizard_art.py; the arena, spells and UI pieces in
 scene_art.py (both drawn from the Claude Design canvas).
 """
+import json
+import os
 import sys
 import pygame
 from pygame import gfxdraw
+import wizard_art
 from wizard_art import draw_wizard, LOOKS
 import scene_art as art
 from scene_art import THEME
@@ -43,9 +46,38 @@ BODY_FONT = art.load_font("body", 22)
 SMALL_FONT = art.load_font("body", 16)
 KEY_FONT = art.load_font("body", 15)
 
-BACKGROUND = art.build_background(WIDTH, HEIGHT, GROUND_Y)
-TITLE_GLOW = pygame.transform.smoothscale(art.radial_glow(100, THEME["gold"], 90), (560, 170))
-PIP_GLOW = art.radial_glow(12, THEME["gold_bright"], 150)
+# ---------------- Night / Day mode ----------------
+SETTINGS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "settings.json")
+BACKGROUND = TITLE_GLOW = PIP_GLOW = None
+
+
+def load_settings():
+    try:
+        with open(SETTINGS_FILE) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def save_settings(settings):
+    try:
+        with open(SETTINGS_FILE, "w") as f:
+            json.dump(settings, f)
+    except OSError:
+        pass                      # not being able to save the mode is harmless
+
+
+def apply_mode(mode):
+    """Switch colors and rebuild the pre-drawn pieces that use them."""
+    global BACKGROUND, TITLE_GLOW, PIP_GLOW
+    art.set_theme(mode)
+    wizard_art.SHIELD_EDGE = (40, 95, 140) if mode == "day" else None
+    BACKGROUND = art.build_background(WIDTH, HEIGHT, GROUND_Y)
+    TITLE_GLOW = pygame.transform.smoothscale(art.radial_glow(100, THEME["gold"], 90), (560, 170))
+    PIP_GLOW = art.radial_glow(12, THEME["gold_bright"], 150)
+
+
+apply_mode(load_settings().get("mode", "night"))
 
 # Playable wizards (FR3)
 # "look" picks the artwork in wizard_art.LOOKS. "power" multiplies spell damage.
@@ -141,7 +173,8 @@ def house_color(wizard):
 
 
 def name_color(wizard):
-    return art.mix(house_color(wizard), (255, 255, 255), 0.45)
+    """House color, lightened at night or darkened by day so names stay readable."""
+    return art.mix(house_color(wizard), THEME["name_tint"], 0.45 if art.MODE == "night" else 0.25)
 
 
 # ---------------- Spell projectile ----------------
@@ -335,6 +368,11 @@ class Game:
         self.tick = 0
         self.message = ""
 
+    def toggle_mode(self):
+        mode = "day" if art.MODE == "night" else "night"
+        apply_mode(mode)
+        save_settings({**load_settings(), "mode": mode})
+
     def start_match(self):
         self.p1 = Fighter(200, WIZARDS[self.choice[0]], CONTROLS[0], 1)
         self.p2 = Fighter(WIDTH - 250, WIZARDS[self.choice[1]], CONTROLS[1], -1)
@@ -367,6 +405,8 @@ class Game:
                 self.state = "select"
             elif k == pygame.K_c:
                 self.state = "controls"
+            elif k == pygame.K_l:
+                self.toggle_mode()
             elif k == pygame.K_ESCAPE:
                 self.running = False
 
@@ -396,6 +436,8 @@ class Game:
                 self.paused = not self.paused
             elif k == pygame.K_TAB:
                 self.show_keys = not self.show_keys
+            elif self.paused and k == pygame.K_l:
+                self.toggle_mode()
             elif self.paused and k == pygame.K_q:
                 self.state = "menu"
 
@@ -468,24 +510,26 @@ class Game:
         draw_wizard(surf, "ember", "cast", 90, 250, facing=1, scale=2, tick=self.tick)
         draw_wizard(surf, "sage", "cast", WIDTH - 190, 250, facing=-1, scale=2, tick=self.tick)
         surf.blit(TITLE_GLOW, TITLE_GLOW.get_rect(center=(WIDTH // 2, 112)))
-        art.text(surf, "Wizard Duel", TITLE_FONT, THEME["gold_bright"], (WIDTH // 2, 108))
+        art.text(surf, "Wizard Duel", TITLE_FONT, THEME["heading"], (WIDTH // 2, 108))
         art.ornament(surf, WIDTH // 2, 168, THEME["gold"])
         art.text(surf, "TWO WIZARDS  ·  ONE KEYBOARD  ·  BEST OF THREE", SMALL_FONT,
-                 THEME["parchment"], (WIDTH // 2, 196))
-        for i, (label, key) in enumerate((("Play", "Enter"), ("Controls", "C"), ("Quit", "Esc"))):
-            art.button(surf, (350, 250 + i * 64, 260, 52), label, key, BODY_FONT, KEY_FONT, selected=i == 0)
+                 THEME["text"], (WIDTH // 2, 196))
+        other_mode = "Day mode" if art.MODE == "night" else "Night mode"
+        items = (("Play", "Enter"), ("Controls", "C"), (other_mode, "L"), ("Quit", "Esc"))
+        for i, (label, key) in enumerate(items):
+            art.button(surf, (350, 232 + i * 58, 260, 48), label, key, BODY_FONT, KEY_FONT, selected=i == 0)
 
     def draw_controls(self, surf):
         art.dim(surf, 150)
         art.panel(surf, (90, 34, 780, 412))
-        art.text(surf, "Controls", HEAD_FONT, THEME["gold_bright"], (WIDTH // 2, 76))
+        art.text(surf, "Controls", HEAD_FONT, THEME["heading"], (WIDTH // 2, 76))
         for p in (0, 1):
             x0 = 130 if p == 0 else 510
             art.text(surf, f"PLAYER {p + 1}", SMALL_FONT, THEME["gold"], (x0, 120), "midleft", False)
             pygame.draw.line(surf, THEME["panel_edge"], (x0, 136), (x0 + 320, 136), 2)
             for r, (names, _, long_label) in enumerate(ACTIONS):
                 y = 150 + r * 42
-                art.text(surf, long_label, BODY_FONT, THEME["parchment"], (x0, y + 13), "midleft", False)
+                art.text(surf, long_label, BODY_FONT, THEME["text"], (x0, y + 13), "midleft", False)
                 kx = x0 + 320
                 for name in reversed(names):
                     label = key_label(CONTROLS[p][name])
@@ -493,12 +537,12 @@ class Game:
                     art.keycap(surf, label, kx, y, KEY_FONT, h=28)
                     kx -= 6
         art.text(surf, "Esc pauses the duel   ·   Tab shows or hides the key bar during a fight",
-                 SMALL_FONT, THEME["muted"], (WIDTH // 2, 420), shadow=False)
+                 SMALL_FONT, THEME["text_muted"], (WIDTH // 2, 420), shadow=False)
         art.button(surf, (380, 466, 200, 50), "Back", "Esc", BODY_FONT, KEY_FONT)
 
     def draw_select(self, surf):
         art.dim(surf, 110)
-        art.text(surf, "Choose your wizard", HEAD_FONT, THEME["gold_bright"], (WIDTH // 2, 54))
+        art.text(surf, "Choose your wizard", HEAD_FONT, THEME["heading"], (WIDTH // 2, 54))
         maxes = {s: max(w.get(s, MAX_HEALTH) for w in WIZARDS) for s in ("speed", "power", "health")}
         for i in (0, 1):
             wiz = WIZARDS[self.choice[i]]
@@ -513,33 +557,33 @@ class Game:
 
             # Wizard preview with browse arrows
             cx = box.centerx
-            pygame.draw.ellipse(surf, (8, 6, 16), (cx - 90, 312, 180, 22))
+            pygame.draw.ellipse(surf, THEME["floor_shadow"], (cx - 90, 312, 180, 22))
             draw_wizard(surf, wiz["look"], "cast" if ready else "idle", cx - 50, 122,
                         facing=1 if i == 0 else -1, scale=1.9, tick=self.tick)
             if not ready:
                 for side in (-1, 1):
                     ax = cx + side * 160
                     pts = [(ax + side * 10, 220), (ax - side * 6, 208), (ax - side * 6, 232)]
-                    pygame.draw.polygon(surf, THEME["muted"], pts)
+                    pygame.draw.polygon(surf, THEME["text_muted"], pts)
 
             art.text(surf, wiz["name"], HEAD_FONT, name_color(wiz), (cx, 352))
-            art.text(surf, look["label"], SMALL_FONT, THEME["muted"], (cx, 380), shadow=False)
+            art.text(surf, look["label"], SMALL_FONT, THEME["text_muted"], (cx, 380), shadow=False)
 
             # Stat bars
             for r, (stat, label) in enumerate((("speed", "SPEED"), ("power", "POWER"), ("health", "HEALTH"))):
                 y = 402 + r * 20
                 value = wiz.get(stat, MAX_HEALTH)
-                art.text(surf, label, KEY_FONT, THEME["parchment"], (box.x + 70, y), "midleft", False)
+                art.text(surf, label, KEY_FONT, THEME["text"], (box.x + 70, y), "midleft", False)
                 bar = pygame.Rect(box.x + 150, y - 5, 190, 10)
                 pygame.draw.rect(surf, THEME["bar_back"], bar, border_radius=5)
                 pygame.draw.rect(surf, THEME["gold"], (bar.x, bar.y, round(bar.w * value / maxes[stat]), bar.h),
                                  border_radius=5)
                 shown = f"x{value}" if stat == "power" else str(value)
-                art.text(surf, shown, KEY_FONT, THEME["parchment"], (bar.right + 10, y), "midleft", False)
+                art.text(surf, shown, KEY_FONT, THEME["text"], (bar.right + 10, y), "midleft", False)
 
             # How to choose
             if ready:
-                art.text(surf, "READY!", NAME_FONT, THEME["gold_bright"], (cx, 482))
+                art.text(surf, "READY!", NAME_FONT, THEME["heading"], (cx, 482))
             else:
                 c = CONTROLS[i]
                 parts = [([key_label(c["left"]), key_label(c["right"])], "change"),
@@ -559,7 +603,7 @@ class Game:
             if self.show_keys:
                 self.draw_key_bar(surf)
             else:
-                art.text(surf, "Tab  show keys", SMALL_FONT, THEME["muted"], (WIDTH // 2, 512), shadow=False)
+                art.text(surf, "Tab  show keys", SMALL_FONT, THEME["text_muted"], (WIDTH // 2, 512), shadow=False)
             if self.paused:
                 self.draw_pause(surf)
         elif self.state == "round_over":
@@ -569,27 +613,27 @@ class Game:
 
     def draw_pause(self, surf):
         art.dim(surf, 150)
-        art.panel(surf, (300, 120, 360, 300))
-        art.text(surf, "Paused", HEAD_FONT, THEME["gold_bright"], (WIDTH // 2, 168))
-        art.button(surf, (330, 212, 300, 50), "Resume", "Esc", BODY_FONT, KEY_FONT, selected=True)
-        art.button(surf, (330, 276, 300, 50), "Hide keys" if self.show_keys else "Show keys",
-                   "Tab", BODY_FONT, KEY_FONT)
-        art.button(surf, (330, 340, 300, 50), "Quit to menu", "Q", BODY_FONT, KEY_FONT)
+        art.panel(surf, (300, 96, 360, 348))
+        art.text(surf, "Paused", HEAD_FONT, THEME["heading"], (WIDTH // 2, 140))
+        items = (("Resume", "Esc"), ("Hide keys" if self.show_keys else "Show keys", "Tab"),
+                 ("Day mode" if art.MODE == "night" else "Night mode", "L"), ("Quit to menu", "Q"))
+        for i, (label, key) in enumerate(items):
+            art.button(surf, (330, 180 + i * 62, 300, 50), label, key, BODY_FONT, KEY_FONT, selected=i == 0)
 
     def draw_round_over(self, surf):
         art.dim(surf, 70)
-        accent = house_color(self.round_winner.wizard) if self.round_winner else THEME["parchment"]
+        accent = house_color(self.round_winner.wizard) if self.round_winner else THEME["text"]
         band = pygame.Surface((WIDTH, 130), pygame.SRCALPHA)
-        band.fill((12, 10, 26, 220))
+        band.fill(art.rgba(THEME["panel"], 225))
         surf.blit(band, (0, 180))
         pygame.draw.line(surf, accent, (0, 180), (WIDTH, 180), 3)
         pygame.draw.line(surf, accent, (0, 309), (WIDTH, 309), 3)
         art.text(surf, f"ROUND {self.round_num}", SMALL_FONT, THEME["gold"], (WIDTH // 2, 206), shadow=False)
-        color = THEME["gold_bright"] if self.round_winner else THEME["parchment"]
+        color = THEME["heading"] if self.round_winner else THEME["text"]
         art.text(surf, self.message, HEAD_FONT, color, (WIDTH // 2, 246))
         sub = "No point awarded" if self.round_winner is None else (
             "The duel is decided..." if max(self.wins) >= ROUNDS_TO_WIN else "Next round begins...")
-        art.text(surf, sub, BODY_FONT, THEME["parchment"], (WIDTH // 2, 284), shadow=False)
+        art.text(surf, sub, BODY_FONT, THEME["text"], (WIDTH // 2, 284), shadow=False)
 
     def draw_match_over(self, surf):
         art.dim(surf, 150)
@@ -598,7 +642,7 @@ class Game:
         pygame.draw.rect(surf, house_color(winner.wizard), box.inflate(10, 10), 3, border_radius=16)
         art.panel(surf, box, edge=THEME["gold_bright"])
         art.text(surf, "MATCH OVER", SMALL_FONT, THEME["gold"], (WIDTH // 2, 136), shadow=False)
-        art.text(surf, self.message, HEAD_FONT, THEME["gold_bright"], (WIDTH // 2, 186))
+        art.text(surf, self.message, HEAD_FONT, THEME["heading"], (WIDTH // 2, 186))
         # Score with round pips
         for i, f in enumerate((self.p1, self.p2)):
             side = -1 if i == 0 else 1
@@ -607,7 +651,7 @@ class Game:
                      (WIDTH // 2 + side * 120, 250), anchor)
             for r in range(ROUNDS_TO_WIN):
                 self.draw_pip(surf, WIDTH // 2 + side * (60 + r * 22), 250, r < self.wins[i])
-        art.text(surf, f"{self.wins[0]} – {self.wins[1]}", NAME_FONT, THEME["parchment"], (WIDTH // 2, 250))
+        art.text(surf, f"{self.wins[0]} – {self.wins[1]}", NAME_FONT, THEME["text"], (WIDTH // 2, 250))
         art.button(surf, (250, 330, 220, 50), "Rematch", "Enter", BODY_FONT, KEY_FONT, selected=True)
         art.button(surf, (490, 330, 220, 50), "Menu", "M", BODY_FONT, KEY_FONT)
 
@@ -617,7 +661,7 @@ class Game:
             surf.blit(PIP_GLOW, (x - 12, y - 12))
             gfxdraw.filled_circle(surf, x, y, 7, THEME["gold_bright"])
         else:
-            gfxdraw.filled_circle(surf, x, y, 7, THEME["bar_back"])
+            gfxdraw.filled_circle(surf, x, y, 7, THEME["pip_empty"])
         gfxdraw.aacircle(surf, x, y, 7, THEME["gold"])
 
     def draw_hud(self, surf):
@@ -631,7 +675,7 @@ class Game:
                 return pygame.Rect(x if i == 0 else x + bar_w - w, y, w, bar_h)
 
             pygame.draw.rect(surf, THEME["bar_back"], (x - 3, y - 3, bar_w + 6, bar_h + 6), border_radius=6)
-            pygame.draw.rect(surf, THEME["window"], span(f.lag_health), border_radius=4)
+            pygame.draw.rect(surf, THEME["lag"], span(f.lag_health), border_radius=4)
             hp = span(f.health)
             pygame.draw.rect(surf, house, hp, border_radius=4)
             pygame.draw.rect(surf, art.mix(house, (255, 255, 255), 0.35), (hp.x, hp.y, hp.w, 5), border_radius=3)
@@ -641,7 +685,7 @@ class Game:
 
             # P1/P2 chip, name and round pips under the bar
             chip = SMALL_FONT.render(f"P{i + 1}", True, (255, 255, 255))
-            name = NAME_FONT.render(f.wizard["name"], True, THEME["parchment"])
+            name = NAME_FONT.render(f.wizard["name"], True, THEME["text"])
             cw = chip.get_width() + 12
             row_y = y + bar_h + 18
             if i == 0:
@@ -660,7 +704,7 @@ class Game:
         # Round plaque
         plaque = art.panel(surf, (WIDTH // 2 - 44, 12, 88, 54), radius=8)
         art.text(surf, "ROUND", KEY_FONT, THEME["gold"], (plaque.centerx, 26), shadow=False)
-        art.text(surf, str(self.round_num), NAME_FONT, THEME["gold_bright"], (plaque.centerx, 49))
+        art.text(surf, str(self.round_num), NAME_FONT, THEME["heading"], (plaque.centerx, 49))
 
     def hint_width(self, parts, h, gap, font=SMALL_FONT):
         total = 0
@@ -689,7 +733,7 @@ class Game:
                         charge, glow = f.charge(slot), color
                 x += art.keycap(surf, lb, x, y, KEY_FONT, h=h, pressed=pressed, charge=charge, glow=glow) + 4
             x += 2
-            img = font.render(word, True, THEME["parchment"])
+            img = font.render(word, True, THEME["text"])
             surf.blit(img, img.get_rect(midleft=(x, y + h // 2 - 1)))
             x += img.get_width() + gap
 
@@ -707,10 +751,10 @@ class Game:
             total = self.hint_width(parts, h, gap, KEY_FONT)
             x = 18 if p == 0 else WIDTH - 18 - total
             strip = pygame.Surface((total + 20, h + 14), pygame.SRCALPHA)
-            strip.fill((5, 4, 12, 150))
+            strip.fill(art.rgba(THEME["panel"], 170))
             surf.blit(strip, (x - 10, y - 7))
             self.draw_hint_row(surf, parts, x, y, h, gap, fighter=p, font=KEY_FONT)
-        art.text(surf, "Esc  pause     Tab  hide keys", KEY_FONT, THEME["muted"],
+        art.text(surf, "Esc  pause     Tab  hide keys", KEY_FONT, THEME["text_muted"],
                  (WIDTH // 2, GROUND_Y + 16), shadow=False)
 
 
