@@ -44,6 +44,16 @@ python wizard_duel.py
 | Stun Bolt   | G        | `.`         |
 | Fire Blast  | H        | `/`         |
 
+Keys are set by their **position** on the keyboard, not by letter, so the
+controls sit in the same place on any layout. The table shows a US (QWERTY)
+keyboard; on a French AZERTY keyboard Player 1 uses **Z Q S D** + F G H and
+Player 2 uses the arrows + **; : =** (Mac) or **; : !** (Windows). The game shows
+the right letters for your keyboard on the Controls screen and in the key bar.
+
+During a fight, a **key bar** along the bottom of the screen shows each
+player's keys. Keys light up while held, and Strike, Stun and Fire fill up as
+they recharge and glow when ready. Press **Tab** to hide or show it.
+
 **Esc** pauses the match; while paused, **Q** quits to the menu.
 
 ## Wizards
@@ -52,8 +62,8 @@ python wizard_duel.py
 |---------|-----------------|-------|-------------|--------|
 | Ember   | Scarlet & gold  | 6     | ×1.0        | 100    |
 | Sage    | Emerald & silver| 5     | ×1.25       | 100    |
-| Quill   | Blue & bronze   | 5.5   | ×1.1        | 100    |
-| Bramble | Yellow & black  | 4.5   | ×1.1        | 120    |
+| Quill   | Sapphire & bronze | 5.5   | ×1.1        | 100    |
+| Bramble | Gold & black    | 4.5   | ×1.1        | 120    |
 
 On the character select screen, use your left/right keys to browse wizards.
 
@@ -68,13 +78,15 @@ On the character select screen, use your left/right keys to browse wizards.
 - Spell damage is multiplied by the wizard's spell power.
 - Blocking reduces incoming damage to 25%, but you can't move or attack while
   blocking (and can only block on the ground).
-- Spell cooldowns are shown as colored bars under each health bar.
+- Spell recharge is shown on the Stun and Fire keys in the key bar.
+- The amber strip on a health bar shows the damage just taken.
 - If both wizards hit 0 health at the same time it's a Double KO and no one
   scores the round.
 
 ## Tweaking the game
 
-All tuning values live at the top of `wizard_duel.py`: screen size, gravity,
+All colors live in `THEME` at the top of `scene_art.py` (wizard colors are
+in `LOOKS` in `wizard_art.py`). All gameplay values live at the top of `wizard_duel.py`: screen size, gravity,
 jump speed, rounds to win, health, damage, block reduction, and the
 `WIZARDS`, `SPELLS` and `CONTROLS` tables.
 
@@ -90,6 +102,7 @@ To add a wizard:
 |------|------------|
 | `wizard_duel.py` | The game: settings, fighters, rounds, menus |
 | `wizard_art.py` | Wizard artwork and poses (idle, walk, jump, block, strike, cast, hit, KO) |
+| `scene_art.py` | Color theme, castle hall, candles, spells, particles, keycaps and buttons |
 | `design/` | Source of the Claude Design canvas (screens, style guide, pitch deck) |
 
 ## Authors

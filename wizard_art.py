@@ -27,29 +27,33 @@ def with_alpha(rgb, alpha):
 # ---------------- Looks (one per wizard) ----------------
 LOOKS = {
     "ember": {
-        "pal": {"robe": "#C8102E", "dark": "#7A0A1C", "trim": "#F5C542", "hat": "#8E0B20",
-                "band": "#F5C542", "skin": "#F2C29E", "hair": "#C2531F", "glow": "#FFD36B"},
+        "house": "#B3203A", "label": "Scarlet & gold",
+        "pal": {"robe": "#8E1A2B", "dark": "#4E0B17", "trim": "#D9A73E", "hat": "#5E0F1E",
+                "band": "#D9A73E", "skin": "#F2C29E", "hair": "#A3441A", "glow": "#FFC75A"},
         "hat": "M12 22 L38 22 L24 -1 Q20 -9 10 -13 Q17 -6 17 2 Z",
         "hair": "M15 23 L7 26 L13 30 L6 35 L14 37 L10 43 L19 39 L22 26 Z",
         "beard": None,
     },
     "sage": {
-        "pal": {"robe": "#2E9E5B", "dark": "#1A472A", "trim": "#D9DEE3", "hat": "#1A472A",
-                "band": "#D9DEE3", "skin": "#C9966F", "hair": "#3A2A22", "glow": "#9CFFC9"},
+        "house": "#1F8A55", "label": "Emerald & silver",
+        "pal": {"robe": "#1B6A44", "dark": "#0B3322", "trim": "#C3CCD6", "hat": "#0F3B27",
+                "band": "#C3CCD6", "skin": "#C9966F", "hair": "#2E211B", "glow": "#7DF0B4"},
         "hat": "M13 22 L37 22 L28 -6 L25 -24 L22 -6 Z",
         "hair": "M14 24 Q10 36 13 47 L21 45 Q18 34 20 26 Z",
         "beard": "M26 39 Q31 50 35 38 Q31 41.5 26 39 Z",
     },
     "quill": {
-        "pal": {"robe": "#2F5BD3", "dark": "#0E1A40", "trim": "#CD8B3E", "hat": "#0E1A40",
-                "band": "#CD8B3E", "skin": "#8A5A3C", "hair": "#1E1B2E", "glow": "#9CC2FF"},
+        "house": "#3459C2", "label": "Sapphire & bronze",
+        "pal": {"robe": "#28479C", "dark": "#111D4A", "trim": "#C08A45", "hat": "#2B3F8A",
+                "band": "#C08A45", "skin": "#8A5A3C", "hair": "#17142A", "glow": "#8DB4FF"},
         "hat": "M12 22 L38 22 L30 2 Q34 -6 42 -9 Q31 -11 25 -3 Z",
         "hair": "M14 25 Q5 30 8 41 Q13 45 19 38 Q17 30 19 26 Z",
         "beard": None,
     },
     "bramble": {
-        "pal": {"robe": "#3A302A", "dark": "#1E1916", "trim": "#FFD23F", "hat": "#FFD23F",
-                "band": "#2B2420", "skin": "#F1C9A5", "hair": "#D9A441", "glow": "#FFE680"},
+        "house": "#D9A72C", "label": "Gold & black",
+        "pal": {"robe": "#2B231E", "dark": "#15110E", "trim": "#E2B23A", "hat": "#D49F22",
+                "band": "#2B231E", "skin": "#F1C9A5", "hair": "#C99439", "glow": "#FFE07A"},
         "hat": "M11 22 L39 22 L31 6 Q25 -3 13 -1 Q21 3 19 9 Z",
         "hair": "M14 24 Q8 26 10 32 Q6 36 12 39 Q14 42 19 38 L21 27 Z",
         "beard": None,
@@ -57,6 +61,7 @@ LOOKS = {
 }
 for _look in LOOKS.values():
     _look["pal"] = {k: hx(v) for k, v in _look["pal"].items()}
+    _look["house"] = hx(_look["house"])        # health bar / name color
 
 # Palette used for the white "just got hit" flash
 WHITE_PAL = {k: hx(v) for k, v in {
