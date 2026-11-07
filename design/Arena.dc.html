@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — arena gameplay</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 960px; height: 540px; position: relative; overflow: hidden; background: #19193A; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4">
+<div style="position: absolute; left: 0; top: 0">
+<dc-import name="Hall" dim="0" hint-size="960px,540px"></dc-import>
+</div>
+<div style="position: absolute; left: {{left1}}px; top: 310px">
+<dc-import name="Wizard" house="ember" pose="{{pose1}}" facing="right" scale="1" hint-size="140px,165px"></dc-import>
+</div>
+<div style="position: absolute; left: {{left2}}px; top: 310px">
+<dc-import name="Wizard" house="sage" pose="{{pose2}}" facing="left" scale="1" hint-size="140px,165px"></dc-import>
+</div>
+<sc-if value="{{spells}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: 392px; top: 358px">
+<dc-import name="Fx" kind="stun" frame="1" color="#5FD0FF" dir="right" scale="1" hint-size="120px,80px"></dc-import>
+</div>
+<div style="position: absolute; left: 534px; top: 364px">
+<dc-import name="Fx" kind="fire" frame="1" dir="left" scale="1" hint-size="120px,80px"></dc-import>
+</div>
+</sc-if>
+<div style="position: absolute; left: 0; top: 0">
+<dc-import name="Hud" hp1="{{hp1}}" hp2="{{hp2}}" win1="{{win1}}" win2="{{win2}}" round="{{round}}" spec="false" hint-size="960px,96px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"pose1":{"editor":"enum","options":["idle","walk","jump","block","melee","cast","hit","ko"],"default":"cast"},"pose2":{"editor":"enum","options":["idle","walk","jump","block","melee","cast","hit","ko"],"default":"cast"},"hp1":{"editor":"range","default":72,"min":0,"max":100,"step":1},"hp2":{"editor":"range","default":58,"min":0,"max":100,"step":1},"win1":{"editor":"int","default":1,"min":0,"max":2},"win2":{"editor":"int","default":0,"min":0,"max":2},"round":{"editor":"int","default":2,"min":1,"max":3},"spells":{"editor":"boolean","default":true},"$preview":{"width":960,"height":540}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const n = (v, d) => { const x = Number(v); return v === undefined || v === null || v === '' || !Number.isFinite(x) ? d : x; };
+    const x1 = n(this.props.x1, 250), x2 = n(this.props.x2, 650);
+    return {
+      pose1: this.props.pose1 || 'cast', pose2: this.props.pose2 || 'cast',
+      left1: x1 - 45, left2: x2 - 45,
+      hp1: n(this.props.hp1, 72), hp2: n(this.props.hp2, 58),
+      win1: n(this.props.win1, 1), win2: n(this.props.win2, 0), round: n(this.props.round, 2),
+      spells: !(this.props.spells === false || this.props.spells === 'false')
+    };
+  }
+}
+</script>
+</body>
+</html>

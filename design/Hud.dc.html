@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — HUD</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 960px; height: {{rootH}}px; position: relative; overflow: hidden; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4">
+<sc-if value="{{spec}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: 0; top: 0">
+<dc-import name="Hall" dim="0.72" hint-size="960px,540px"></dc-import>
+</div>
+</sc-if>
+
+<div style="position: absolute; left: 20px; top: 12px; width: 400px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 8px; height: 22px">
+<span style="padding: 2px 7px; border-radius: 3px; background: #C8102E; color: #FFFFFF; font-size: 13px; font-weight: 700; letter-spacing: 1px">P1</span>
+<span style="font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 17px; letter-spacing: 1.5px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9)">Ember</span>
+<div style="display: flex; gap: 6px; margin-left: 4px">
+<sc-for list="{{pips1}}" as="p" hint-placeholder-count="2">
+<span style="width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; background: {{p.bg}}; border: 2px solid {{p.ring}}; box-shadow: {{p.glow}}"></span>
+</sc-for>
+</div>
+</div>
+<div style="width: 400px; height: 22px; box-sizing: border-box; position: relative; overflow: hidden; border-radius: 4px; background: #120F22; border: 2px solid #F3E6C4; box-shadow: 0 0 0 2px #120F22, 0 4px 10px rgba(0, 0, 0, 0.5)">
+<div style="position: absolute; left: 0; top: 0; bottom: 0; width: {{lag1}}px; background: #F2C879"></div>
+<div style="position: absolute; left: 0; top: 0; bottom: 0; width: {{hpw1}}px; background: #C8102E"></div>
+<div style="position: absolute; left: 0; top: 0; height: 6px; width: {{hpw1}}px; background: #FF6B80"></div>
+<div style="position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 39px, rgba(18, 15, 34, 0.45) 39px 40px)"></div>
+</div>
+<div style="display: flex; gap: 16px; margin-top: 2px">
+<sc-for list="{{cd1}}" as="c" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 6px">
+<span style="width: 20px; height: 20px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 4px; background: #2B2420; border: 1px solid #5A4E44; border-bottom-width: 2px; font-size: 12px; font-weight: 700; color: #F3E6C4">{{c.key}}</span>
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 1px; color: {{c.labelCol}}; text-shadow: 0 1px 3px #000">{{c.label}}</span>
+<div style="width: 80px; height: 8px; border-radius: 4px; background: #120F22; border: 1px solid #5C5668; overflow: hidden; box-shadow: {{c.glow}}">
+<div style="height: 100%; width: {{c.w}}px; background: {{c.fill}}; opacity: {{c.op}}"></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="position: absolute; left: 436px; top: 12px; width: 88px; height: 58px; box-sizing: border-box; border-radius: 8px; background: #15142C; border: 2px solid #F5C542; box-shadow: 0 0 16px rgba(245, 197, 66, 0.35); display: flex; flex-direction: column; align-items: center; justify-content: center">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 3px; color: #F2C879">ROUND</span>
+<span style="font-family: 'Cinzel', Georgia, serif; font-weight: 900; font-size: 26px; line-height: 1; color: #F5C542">{{round}}</span>
+</div>
+
+<div style="position: absolute; right: 20px; top: 12px; width: 400px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px">
+<div style="display: flex; flex-direction: row-reverse; align-items: center; gap: 8px; height: 22px">
+<span style="padding: 2px 7px; border-radius: 3px; background: #1F7A45; color: #FFFFFF; font-size: 13px; font-weight: 700; letter-spacing: 1px">P2</span>
+<span style="font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 17px; letter-spacing: 1.5px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9)">Sage</span>
+<div style="display: flex; gap: 6px; margin-right: 4px">
+<sc-for list="{{pips2}}" as="p" hint-placeholder-count="2">
+<span style="width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; background: {{p.bg}}; border: 2px solid {{p.ring}}; box-shadow: {{p.glow}}"></span>
+</sc-for>
+</div>
+</div>
+<div style="width: 400px; height: 22px; box-sizing: border-box; position: relative; overflow: hidden; border-radius: 4px; background: #120F22; border: 2px solid #F3E6C4; box-shadow: 0 0 0 2px #120F22, 0 4px 10px rgba(0, 0, 0, 0.5)">
+<div style="position: absolute; right: 0; top: 0; bottom: 0; width: {{lag2}}px; background: #F2C879"></div>
+<div style="position: absolute; right: 0; top: 0; bottom: 0; width: {{hpw2}}px; background: #2E9E5B"></div>
+<div style="position: absolute; right: 0; top: 0; height: 6px; width: {{hpw2}}px; background: #73E0A3"></div>
+<div style="position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 39px, rgba(18, 15, 34, 0.45) 39px 40px)"></div>
+</div>
+<div style="display: flex; flex-direction: row-reverse; gap: 16px; margin-top: 2px">
+<sc-for list="{{cd2}}" as="c" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: row-reverse; align-items: center; gap: 6px">
+<span style="width: 20px; height: 20px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 4px; background: #2B2420; border: 1px solid #5A4E44; border-bottom-width: 2px; font-size: 13px; font-weight: 700; color: #F3E6C4">{{c.key}}</span>
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 1px; color: {{c.labelCol}}; text-shadow: 0 1px 3px #000">{{c.label}}</span>
+<div style="width: 80px; height: 8px; border-radius: 4px; background: #120F22; border: 1px solid #5C5668; overflow: hidden; display: flex; justify-content: flex-end; box-shadow: {{c.glow}}">
+<div style="height: 100%; width: {{c.w}}px; background: {{c.fill}}; opacity: {{c.op}}"></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{spec}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: 24px; top: 128px; width: 912px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: baseline; gap: 14px">
+<h2 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 24px; color: #F5C542">HUD components</h2>
+<span style="font-size: 14px; color: #D8CFE6">Shown at 1:1 above. P2 is a mirror image: bars are anchored to the outer edges and drain toward the center.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<div style="padding: 16px; border-radius: 10px; background: rgba(18, 16, 40, 0.92); border: 1px solid #4A4552; display: flex; flex-direction: column; gap: 12px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #F3E6C4">Health · 400 × 22</h3>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #D8CFE6">Full</span>
+<div style="height: 14px; border-radius: 3px; border: 2px solid #F3E6C4; background: #C8102E"></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #D8CFE6">Just hit: amber shows the lost chunk, then drains</span>
+<div style="height: 14px; border-radius: 3px; border: 2px solid #F3E6C4; background: #120F22; display: flex"><div style="width: 58%; background: #C8102E"></div><div style="width: 12%; background: #F2C879"></div></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #D8CFE6">Under 25%: frame turns amber and pulses</span>
+<div style="height: 14px; border-radius: 3px; border: 2px solid #FFB347; box-shadow: 0 0 10px rgba(255, 179, 71, 0.8); background: #120F22; display: flex"><div style="width: 18%; background: #C8102E"></div></div>
+</div>
+</div>
+<div style="padding: 16px; border-radius: 10px; background: rgba(18, 16, 40, 0.92); border: 1px solid #4A4552; display: flex; flex-direction: column; gap: 12px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #F3E6C4">Round pips · best of 3</h3>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 14px; color: #D8CFE6">No rounds won</span>
+<div style="display: flex; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; border: 2px solid #F3E6C4"></span><span style="width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; border: 2px solid #F3E6C4"></span></div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 14px; color: #D8CFE6">One round won</span>
+<div style="display: flex; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; border: 2px solid #F5C542; background: #F5C542; box-shadow: 0 0 8px rgba(245, 197, 66, 0.8)"></span><span style="width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; border: 2px solid #F3E6C4"></span></div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 14px; color: #D8CFE6">Match won</span>
+<div style="display: flex; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; border: 2px solid #F5C542; background: #F5C542; box-shadow: 0 0 8px rgba(245, 197, 66, 0.8)"></span><span style="width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; border: 2px solid #F5C542; background: #F5C542; box-shadow: 0 0 8px rgba(245, 197, 66, 0.8)"></span></div>
+</div>
+<span style="font-size: 13px; color: #D8CFE6">Gold pips are the same for both players so the score reads instantly.</span>
+</div>
+<div style="padding: 16px; border-radius: 10px; background: rgba(18, 16, 40, 0.92); border: 1px solid #4A4552; display: flex; flex-direction: column; gap: 12px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #F3E6C4">Spell cooldowns · 80 × 8</h3>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 14px; color: #FFFFFF; font-weight: 700">Stun Bolt · ready</span>
+<div style="width: 80px; height: 8px; border-radius: 4px; background: #5FD0FF; border: 1px solid #5C5668; box-shadow: 0 0 8px rgba(95, 208, 255, 0.9)"></div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 14px; color: #D8CFE6">Fire Blast · charging</span>
+<div style="width: 80px; height: 8px; border-radius: 4px; background: #120F22; border: 1px solid #5C5668; overflow: hidden"><div style="width: 30%; height: 100%; background: #FF8A1F; opacity: 0.65"></div></div>
+</div>
+<span style="font-size: 13px; color: #D8CFE6">Each bar carries its key, so new players learn the controls while they play. Blue = Stun Bolt, orange = Fire Blast, for every wizard.</span>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hp1":{"editor":"range","default":72,"min":0,"max":100,"step":1},"hp2":{"editor":"range","default":58,"min":0,"max":100,"step":1},"win1":{"editor":"int","default":1,"min":0,"max":2},"win2":{"editor":"int","default":0,"min":0,"max":2},"round":{"editor":"int","default":2,"min":1,"max":3},"spec":{"editor":"boolean","default":true},"$preview":{"width":960,"height":540}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const n = (v, d) => { const x = Number(v); return v === undefined || v === null || v === '' || !Number.isFinite(x) ? d : x; };
+    const hp1 = n(this.props.hp1, 72), hp2 = n(this.props.hp2, 58);
+    const w1 = n(this.props.win1, 1), w2 = n(this.props.win2, 0);
+    const spec = !(this.props.spec === false || this.props.spec === 'false');
+    const pip = (on) => ({ bg: on ? '#F5C542' : 'transparent', ring: on ? '#F5C542' : '#F3E6C4', glow: on ? '0 0 8px rgba(245,197,66,0.8)' : 'none' });
+    const cd = (key, label, charge, color, glowCol) => {
+      const ready = charge >= 1;
+      return { key, label, w: Math.round(80 * Math.min(1, charge)), fill: color, op: ready ? 1 : 0.65, labelCol: ready ? '#FFFFFF' : '#BDB4CF', glow: ready ? '0 0 8px ' + glowCol : 'none' };
+    };
+    const c = (v, d) => n(v, d);
+    return {
+      spec, rootH: spec ? 540 : 96, round: n(this.props.round, 2),
+      hpw1: Math.round(3.96 * hp1), lag1: Math.round(3.96 * Math.min(100, hp1 > 0 ? hp1 + 9 : 0)),
+      hpw2: Math.round(3.96 * hp2), lag2: Math.round(3.96 * Math.min(100, hp2 > 0 ? hp2 + 6 : 0)),
+      pips1: [pip(w1 >= 1), pip(w1 >= 2)], pips2: [pip(w2 >= 1), pip(w2 >= 2)],
+      cd1: [cd('G', 'STUN', c(this.props.cda1, 0.4), '#5FD0FF', 'rgba(95,208,255,0.9)'), cd('H', 'FIRE', c(this.props.cdb1, 1), '#FF8A1F', 'rgba(255,138,31,0.9)')],
+      cd2: [cd('.', 'STUN', c(this.props.cda2, 1), '#5FD0FF', 'rgba(95,208,255,0.9)'), cd('/', 'FIRE', c(this.props.cdb2, 0.2), '#FF8A1F', 'rgba(255,138,31,0.9)')]
+    };
+  }
+}
+</script>
+</body>
+</html>

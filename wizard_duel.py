@@ -4,10 +4,11 @@ Wizard Duel - a simple 2D local 2-player fighting game (Pygame prototype).
 Run:  pip install pygame
       python wizard_duel.py
 
-Characters are drawn with basic shapes for now. Swap in sprites later.
+Wizard artwork lives in wizard_art.py (drawn from the Claude Design canvas).
 """
 import sys
 import pygame
+from wizard_art import draw_wizard
 
 pygame.init()
 
@@ -18,7 +19,7 @@ GROUND_Y = HEIGHT - 80
 GRAVITY = 0.8
 JUMP_SPEED = -16
 ROUNDS_TO_WIN = 2          # best 2 out of 3 (FR8)
-MAX_HEALTH = 100
+MAX_HEALTH = 100          # default; a wizard can override it with "health"
 MELEE_DAMAGE = 6
 BLOCK_REDUCTION = 0.25     # blocked hits do 25% damage
 
@@ -35,9 +36,12 @@ SMALL_FONT = pygame.font.SysFont(None, 24)
 BIG_FONT = pygame.font.SysFont(None, 72)
 
 # Playable wizards (FR3)
+# "look" picks the artwork in wizard_art.LOOKS. "power" multiplies spell damage.
 WIZARDS = [
-    {"name": "Ember", "color": (200, 60, 50), "speed": 6, "power": 1.0},
-    {"name": "Sage", "color": (60, 160, 90), "speed": 5, "power": 1.25},
+    {"name": "Ember", "look": "ember", "speed": 6, "power": 1.0, "health": 100},
+    {"name": "Sage", "look": "sage", "speed": 5, "power": 1.25, "health": 100},
+    {"name": "Quill", "look": "quill", "speed": 5.5, "power": 1.1, "health": 100},
+    {"name": "Bramble", "look": "bramble", "speed": 4.5, "power": 1.1, "health": 120},
 ]
 
 # Two spells per character (FR5). Cooldowns are in frames (60 = 1 second).
@@ -113,12 +117,17 @@ class Fighter:
     def reset(self):
         self.rect = pygame.Rect(self.start_x, GROUND_Y - self.HEIGHT,
                                 self.WIDTH, self.HEIGHT)
+        self.x = float(self.start_x)   # float position so fractional speeds work
         self.vy = 0
-        self.health = MAX_HEALTH
+        self.max_health = self.wizard.get("health", MAX_HEALTH)
+        self.health = self.max_health
         self.facing = self.start_facing
         self.blocking = False
         self.attack_timer = 0
         self.hit_flash = 0
+        self.cast_timer = 0
+        self.moving = False
+        self.anim = 0
         self.cooldowns = {"attack": 0, "spell1": 0, "spell2": 0}
 
     def on_ground(self):
@@ -146,17 +155,24 @@ class Fighter:
             self.attack_timer -= 1
         if self.hit_flash > 0:
             self.hit_flash -= 1
+        if self.cast_timer > 0:
+            self.cast_timer -= 1
+        self.anim += 1
 
         # Movement, jump, block (FR4). Can't move while blocking.
         self.blocking = keys[c["block"]] and self.on_ground()
+        self.moving = False
         if not self.blocking:
             if keys[c["left"]]:
-                self.rect.x -= self.wizard["speed"]
+                self.x -= self.wizard["speed"]
+                self.moving = True
             if keys[c["right"]]:
-                self.rect.x += self.wizard["speed"]
+                self.x += self.wizard["speed"]
+                self.moving = not self.moving   # both keys held = standing still
             if keys[c["jump"]] and self.on_ground():
                 self.vy = JUMP_SPEED
-        self.rect.x = max(0, min(WIDTH - self.rect.width, self.rect.x))
+        self.x = max(0, min(WIDTH - self.rect.width, self.x))
+        self.rect.x = round(self.x)
 
         # Gravity
         self.vy += GRAVITY
@@ -186,22 +202,29 @@ class Fighter:
                 projectiles.append(Projectile(self, spell, x, self.rect.y + 45,
                                               self.facing, self.wizard["power"]))
                 self.cooldowns[slot] = spell["cooldown"]
+                self.cast_timer = 12
+
+    def pose(self):
+        if self.health <= 0:
+            return "ko"
+        if self.hit_flash > 0:
+            return "hit"
+        if self.blocking:
+            return "block"
+        if self.attack_timer > 0:
+            return "melee"
+        if self.cast_timer > 0:
+            return "cast"
+        if not self.on_ground():
+            return "jump"
+        if self.moving:
+            return "walk" if (self.anim // 8) % 2 == 0 else "idle"
+        return "idle"
 
     def draw(self, surf):
-        cx, y = self.rect.centerx, self.rect.y
-        robe = WHITE if self.hit_flash > 0 else self.wizard["color"]
-        body = pygame.Rect(self.rect.x, y + 25, self.rect.width, self.rect.height - 25)
-        pygame.draw.rect(surf, robe, body, border_radius=8)
-        pygame.draw.circle(surf, (240, 210, 180), (cx, y + 15), 15)          # head
-        pygame.draw.polygon(surf, (40, 40, 70),
-                            [(cx - 20, y + 6), (cx + 20, y + 6), (cx, y - 30)])  # hat
-        wx, wy = cx + self.facing * 22, y + 50
-        pygame.draw.line(surf, (110, 70, 30), (wx, wy),
-                         (wx + self.facing * 28, wy - 10), 4)                 # wand
-        if self.blocking:
-            pygame.draw.circle(surf, (150, 200, 255), self.rect.center, 62, 3)
-        if self.attack_timer > 0:
-            pygame.draw.rect(surf, GOLD, self.attack_box(), 3)
+        draw_wizard(surf, self.wizard["look"], self.pose(), self.rect.x, self.rect.y,
+                    facing=self.facing, white=self.hit_flash > 5, tick=self.anim,
+                    ground=GROUND_Y - self.rect.y)
 
 
 # ---------------- Game (menus, rounds, drawing) ----------------
@@ -260,7 +283,9 @@ class Game:
                 c = CONTROLS[i]
                 if self.ready[i]:
                     continue
-                if k in (c["left"], c["right"]):
+                if k == c["left"]:
+                    self.choice[i] = (self.choice[i] - 1) % len(WIZARDS)
+                elif k == c["right"]:
                     self.choice[i] = (self.choice[i] + 1) % len(WIZARDS)
                 elif k == c["attack"]:
                     self.ready[i] = True
@@ -328,7 +353,7 @@ class Game:
         for i, f in enumerate((self.p1, self.p2)):
             x = 30 if i == 0 else WIDTH - 30 - bar_w
             pygame.draw.rect(surf, (70, 0, 0), (x, 20, bar_w, bar_h))
-            fill = int(bar_w * f.health / MAX_HEALTH)
+            fill = int(bar_w * f.health / f.max_health)
             fx = x if i == 0 else x + bar_w - fill
             pygame.draw.rect(surf, (220, 40, 40), (fx, 20, fill, bar_h))
             pygame.draw.rect(surf, WHITE, (x, 20, bar_w, bar_h), 2)
@@ -369,13 +394,15 @@ class Game:
             for i in (0, 1):
                 cx = WIDTH // 4 if i == 0 else 3 * WIDTH // 4
                 wiz = WIZARDS[self.choice[i]]
-                pygame.draw.rect(surf, wiz["color"], (cx - 40, 180, 80, 140), border_radius=10)
-                draw_text(surf, f"Player {i + 1}: {wiz['name']}", FONT, WHITE, (cx, 360))
-                draw_text(surf, f"Speed {wiz['speed']}  Power x{wiz['power']}",
-                          SMALL_FONT, GRAY, (cx, 395))
+                pygame.draw.ellipse(surf, (35, 35, 65), (cx - 110, 345, 220, 24))
+                draw_wizard(surf, wiz["look"], "cast" if self.ready[i] else "idle",
+                            cx - 50, 155, facing=1 if i == 0 else -1, scale=2)
+                draw_text(surf, f"<  Player {i + 1}: {wiz['name']}  >", FONT, WHITE, (cx, 395))
+                draw_text(surf, f"Speed {wiz['speed']}   Power x{wiz['power']}   "
+                          f"Health {wiz.get('health', MAX_HEALTH)}", SMALL_FONT, GRAY, (cx, 425))
                 status = "READY!" if self.ready[i] else (
                     "A/D change, F confirm" if i == 0 else "Left/Right change, , confirm")
-                draw_text(surf, status, SMALL_FONT, GOLD if self.ready[i] else WHITE, (cx, 440))
+                draw_text(surf, status, SMALL_FONT, GOLD if self.ready[i] else WHITE, (cx, 460))
 
         else:  # fight, round_over, match_over
             self.draw_arena(surf)

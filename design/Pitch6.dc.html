@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — Pitch — UI</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 960px; height: 540px; position: relative; overflow: hidden; background: #15142C; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4">
+<div style="position: absolute; left: 56px; top: 40px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 700; letter-spacing: 4px; color: #F2C879">INTERFACE</span>
+<h1 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 34px; line-height: 1.1; color: #F5C542">Menus and HUD that read in a blink</h1>
+</div>
+<div style="position: absolute; left: 56px; top: 116px; display: flex; flex-direction: column; gap: 4px">
+<div style="width: 317px; height: 178px; overflow: hidden; border-radius: 6px; border: 2px solid #4A4552"><div style="width: 960px; height: 540px; transform: scale(0.33); transform-origin: 0 0"><dc-import name="Main" hint-size="960px,540px"></dc-import></div></div>
+<span style="font-size: 14px; font-weight: 700; letter-spacing: 1px">Title menu</span>
+</div>
+<div style="position: absolute; left: 391px; top: 116px; display: flex; flex-direction: column; gap: 4px">
+<div style="width: 317px; height: 178px; overflow: hidden; border-radius: 6px; border: 2px solid #4A4552"><div style="width: 960px; height: 540px; transform: scale(0.33); transform-origin: 0 0"><dc-import name="Select" hint-size="960px,540px"></dc-import></div></div>
+<span style="font-size: 14px; font-weight: 700; letter-spacing: 1px">Character select</span>
+</div>
+<div style="position: absolute; left: 56px; top: 324px; display: flex; flex-direction: column; gap: 4px">
+<div style="width: 317px; height: 178px; overflow: hidden; border-radius: 6px; border: 2px solid #4A4552"><div style="width: 960px; height: 540px; transform: scale(0.33); transform-origin: 0 0"><dc-import name="Arena" hint-size="960px,540px"></dc-import></div></div>
+<span style="font-size: 14px; font-weight: 700; letter-spacing: 1px">In-game HUD</span>
+</div>
+<div style="position: absolute; left: 391px; top: 324px; display: flex; flex-direction: column; gap: 4px">
+<div style="width: 317px; height: 178px; overflow: hidden; border-radius: 6px; border: 2px solid #4A4552"><div style="width: 960px; height: 540px; transform: scale(0.33); transform-origin: 0 0"><dc-import name="RoundOver" hint-size="960px,540px"></dc-import></div></div>
+<span style="font-size: 14px; font-weight: 700; letter-spacing: 1px">Round over</span>
+</div>
+<ul style="position: absolute; left: 740px; top: 120px; width: 184px; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 18px">
+<li style="display: flex; align-items: flex-start; gap: 10px; font-size: 17px; font-weight: 600; line-height: 1.3"><span style="margin-top: 4px; display: flex"><svg width="12" height="12" viewBox="-6 -6 12 12" aria-hidden="true" style="flex-shrink: 0"><path d="M0 -6 L2 -2 L6 0 L2 2 L0 6 L-2 2 L-6 0 L-2 -2 Z" fill="#F5C542"/></svg></span>Cinzel for the magic, Barlow for everything players read</li>
+<li style="display: flex; align-items: flex-start; gap: 10px; font-size: 17px; font-weight: 600; line-height: 1.3"><span style="margin-top: 4px; display: flex"><svg width="12" height="12" viewBox="-6 -6 12 12" aria-hidden="true" style="flex-shrink: 0"><path d="M0 -6 L2 -2 L6 0 L2 2 L0 6 L-2 2 L-6 0 L-2 -2 Z" fill="#F5C542"/></svg></span>A keycap next to every prompt</li>
+<li style="display: flex; align-items: flex-start; gap: 10px; font-size: 17px; font-weight: 600; line-height: 1.3"><span style="margin-top: 4px; display: flex"><svg width="12" height="12" viewBox="-6 -6 12 12" aria-hidden="true" style="flex-shrink: 0"><path d="M0 -6 L2 -2 L6 0 L2 2 L0 6 L-2 2 L-6 0 L-2 -2 Z" fill="#F5C542"/></svg></span>Mirrored HUD: bars drain toward the center</li>
+<li style="display: flex; align-items: flex-start; gap: 10px; font-size: 17px; font-weight: 600; line-height: 1.3"><span style="margin-top: 4px; display: flex"><svg width="12" height="12" viewBox="-6 -6 12 12" aria-hidden="true" style="flex-shrink: 0"><path d="M0 -6 L2 -2 L6 0 L2 2 L0 6 L-2 2 L-6 0 L-2 -2 Z" fill="#F5C542"/></svg></span>Gold always means selected, ready or won</li>
+</ul>
+<span style="position: absolute; right: 32px; bottom: 20px; font-size: 13px; font-weight: 600; letter-spacing: 2px; color: #BDB4CF">6 / 7</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":540}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

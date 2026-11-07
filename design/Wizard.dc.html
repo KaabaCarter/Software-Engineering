@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard sprite</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: {{w}}px; height: {{h}}px; position: relative">
+<svg width="{{w}}" height="{{h}}" viewBox="-45 -50 140 165" style="display: block; overflow: visible">
+<ellipse cx="25" cy="100" rx="{{shadowRx}}" ry="3.5" fill="#000000" fill-opacity="0.35"/>
+<g transform="{{flip}}">
+<g transform="{{bodyT}}">
+<path d="M18 48 Q10 58 11 72 L18 73 Q19 60 24 50 Z" fill="{{c.dark}}"/>
+<path d="M15 45 L10 64 L16 65 L20 47 Z" fill="{{c.trim}}"/>
+<ellipse cx="{{boot1}}" cy="{{bootY}}" rx="7" ry="3.5" fill="#1A1424"/>
+<ellipse cx="{{boot2}}" cy="{{bootY}}" rx="7" ry="3.5" fill="#1A1424"/>
+<path d="{{robePath}}" fill="{{c.robe}}"/>
+<path d="M25 50 L33 94 L24 96 Z" fill="{{c.dark}}" fill-opacity="0.55"/>
+<path d="{{hemPath}}" fill="{{c.trim}}"/>
+<rect x="14" y="41" width="22" height="7" rx="3.5" fill="{{c.trim}}"/>
+<rect x="20" y="41" width="3" height="7" fill="{{c.dark}}"/>
+<rect x="27" y="41" width="3" height="7" fill="{{c.dark}}"/>
+<path d="{{c.hairPath}}" fill="{{c.hair}}"/>
+<circle cx="25" cy="31" r="11" fill="{{c.skin}}"/>
+<circle cx="31" cy="34.5" r="2.2" fill="#FF8FA3" fill-opacity="0.45"/>
+<g display="{{eyesOpen}}">
+<ellipse cx="30.5" cy="30" rx="1.6" ry="2.2" fill="#1A1424"/>
+<path d="M28 26.3 L33.6 27" stroke="#1A1424" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+</g>
+<g display="{{eyesKo}}">
+<path d="M28.5 28 L32.5 32 M32.5 28 L28.5 32" stroke="#1A1424" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+</g>
+<path d="M29.8 36.6 Q31.8 37.6 33.4 36.4" stroke="#1A1424" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+<path d="{{c.beard}}" fill="{{c.trim}}"/>
+<path d="{{c.hatPath}}" fill="{{c.hat}}"/>
+<path d="M13.5 22 L36.5 22 L35 17 L15 17 Z" fill="{{c.band}}"/>
+<ellipse cx="25" cy="22.5" rx="18" ry="3.6" fill="{{c.hat}}"/>
+<g transform="{{armT}}">
+<line x1="49" y1="50.5" x2="71" y2="50.5" stroke="#7A4E2A" stroke-width="2.6" stroke-linecap="round"/>
+<line x1="49" y1="50.5" x2="56" y2="50.5" stroke="#3E2614" stroke-width="3.6" stroke-linecap="round"/>
+<rect x="29" y="45.5" width="18" height="10" rx="5" fill="{{c.robe}}"/>
+<rect x="42" y="45.5" width="4" height="10" fill="{{c.trim}}"/>
+<circle cx="48.5" cy="50.5" r="3.6" fill="{{c.skin}}"/>
+<circle cx="71.5" cy="50.5" r="2.3" fill="{{c.glow}}"/>
+<g display="{{orb}}">
+<circle cx="74" cy="50.5" r="13" fill="{{c.glow}}" fill-opacity="0.25"/>
+<circle cx="74" cy="50.5" r="7" fill="{{c.glow}}" fill-opacity="0.7"/>
+<circle cx="74" cy="50.5" r="3.5" fill="#FFFFFF"/>
+<path transform="translate(86 40)" d="M0 -5 L1.3 -1.3 L5 0 L1.3 1.3 L0 5 L-1.3 1.3 L-5 0 L-1.3 -1.3 Z" fill="#FFFFFF"/>
+<path transform="translate(80 64)" d="M0 -4 L1 -1 L4 0 L1 1 L0 4 L-1 1 L-4 0 L-1 -1 Z" fill="{{c.glow}}"/>
+</g>
+<g display="{{slash}}">
+<path d="M70 26 Q100 50.5 70 75 Q86 50.5 70 26 Z" fill="#FFFFFF" fill-opacity="0.85"/>
+<path transform="translate(80 50.5)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" fill="{{c.glow}}"/>
+</g>
+</g>
+</g>
+<g display="{{koFx}}">
+<ellipse cx="-16" cy="58" rx="16" ry="5" fill="none" stroke="#F5C542" stroke-opacity="0.6" stroke-dasharray="3 3"/>
+<path transform="translate(-28 57)" d="M0 -5 L1.5 -1.6 L5 -1.6 L2.2 0.8 L3.1 4.2 L0 2.2 L-3.1 4.2 L-2.2 0.8 L-5 -1.6 L-1.5 -1.6 Z" fill="#F5C542"/>
+<path transform="translate(-12 63)" d="M0 -5 L1.5 -1.6 L5 -1.6 L2.2 0.8 L3.1 4.2 L0 2.2 L-3.1 4.2 L-2.2 0.8 L-5 -1.6 L-1.5 -1.6 Z" fill="#FFFFFF"/>
+<path transform="translate(-2 54)" d="M0 -5 L1.5 -1.6 L5 -1.6 L2.2 0.8 L3.1 4.2 L0 2.2 L-3.1 4.2 L-2.2 0.8 L-5 -1.6 L-1.5 -1.6 Z" fill="#F5C542"/>
+</g>
+<g display="{{shield}}">
+<circle cx="25" cy="50" r="62" fill="#9FD3FF" fill-opacity="0.2" stroke="#CFEBFF" stroke-opacity="0.9" stroke-width="2.5"/>
+<circle cx="25" cy="50" r="55" fill="none" stroke="#9FD3FF" stroke-opacity="0.45" stroke-width="1" stroke-dasharray="4 5"/>
+<path d="M-22 14 A58 58 0 0 1 16 -7" stroke="#FFFFFF" stroke-opacity="0.75" stroke-width="3" stroke-linecap="round" fill="none"/>
+<path transform="translate(78 18)" d="M0 -5 L1.3 -1.3 L5 0 L1.3 1.3 L0 5 L-1.3 1.3 L-5 0 L-1.3 -1.3 Z" fill="#FFFFFF"/>
+</g>
+</g>
+<g display="{{hitFx}}">
+<path d="M50 20 L62 12 M54 34 L70 32 M50 48 L64 56 M44 10 L48 -2" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none"/>
+<path transform="translate(58 26)" d="M0 -7 L2 -2 L7 0 L2 2 L0 7 L-2 2 L-7 0 L-2 -2 Z" fill="#FFE680"/>
+</g>
+<rect display="{{hb}}" x="0" y="{{hbY}}" width="50" height="100" fill="none" stroke="#5FD0FF" stroke-width="1" stroke-dasharray="3 2"/>
+</svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"house":{"editor":"enum","options":["ember","sage","quill","bramble"],"default":"ember"},"pose":{"editor":"enum","options":["idle","walk","jump","block","melee","cast","hit","ko"],"default":"idle"},"facing":{"editor":"enum","options":["right","left"],"default":"right"},"scale":{"editor":"float","default":2,"min":0.5,"max":4,"step":0.1},"hitbox":{"editor":"boolean","default":false},"$preview":{"width":280,"height":330}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const HATS = {
+      ember: 'M12 22 L38 22 L24 -1 Q20 -9 10 -13 Q17 -6 17 2 Z',
+      sage: 'M13 22 L37 22 L28 -6 L25 -24 L22 -6 Z',
+      quill: 'M12 22 L38 22 L30 2 Q34 -6 42 -9 Q31 -11 25 -3 Z',
+      bramble: 'M11 22 L39 22 L31 6 Q25 -3 13 -1 Q21 3 19 9 Z'
+    };
+    const HAIR = {
+      ember: 'M15 23 L7 26 L13 30 L6 35 L14 37 L10 43 L19 39 L22 26 Z',
+      sage: 'M14 24 Q10 36 13 47 L21 45 Q18 34 20 26 Z',
+      quill: 'M14 25 Q5 30 8 41 Q13 45 19 38 Q17 30 19 26 Z',
+      bramble: 'M14 24 Q8 26 10 32 Q6 36 12 39 Q14 42 19 38 L21 27 Z'
+    };
+    const PAL = {
+      ember: { robe: '#C8102E', dark: '#7A0A1C', trim: '#F5C542', hat: '#8E0B20', band: '#F5C542', skin: '#F2C29E', hair: '#C2531F', glow: '#FFD36B', beard: 'M0 0' },
+      sage: { robe: '#2E9E5B', dark: '#1A472A', trim: '#D9DEE3', hat: '#1A472A', band: '#D9DEE3', skin: '#C9966F', hair: '#3A2A22', glow: '#9CFFC9', beard: 'M26 39 Q31 50 35 38 Q31 41.5 26 39 Z' },
+      quill: { robe: '#2F5BD3', dark: '#0E1A40', trim: '#CD8B3E', hat: '#0E1A40', band: '#CD8B3E', skin: '#8A5A3C', hair: '#1E1B2E', glow: '#9CC2FF', beard: 'M0 0' },
+      bramble: { robe: '#3A302A', dark: '#1E1916', trim: '#FFD23F', hat: '#FFD23F', band: '#2B2420', skin: '#F1C9A5', hair: '#D9A441', glow: '#FFE680', beard: 'M0 0' }
+    };
+    const ROBES = {
+      idle: ['M15 46 Q25 42 35 46 L49 96 Q25 101 1 96 Z', 'M3 90 Q25 94 47 90 L49 96 Q25 101 1 96 Z'],
+      walk: ['M15 46 Q25 42 35 46 L46 96 Q22 101 -3 95 Z', 'M-1 89 Q22 94 44.5 90 L46 96 Q22 101 -3 95 Z'],
+      jump: ['M15 46 Q25 42 35 46 L52 90 Q25 97 -2 90 Z', 'M0 84 Q25 90 50 84 L52 90 Q25 97 -2 90 Z']
+    };
+    const POSES = {
+      idle: { body: 'translate(0 0)', arm: 52, robe: 'idle', boots: [17, 33, 98], shadow: 22 },
+      walk: { body: 'rotate(5 25 98)', arm: 38, robe: 'walk', boots: [7, 40, 98], shadow: 22 },
+      jump: { body: 'translate(0 -34)', arm: 18, robe: 'jump', boots: [19, 31, 93], shadow: 13, hbY: -34 },
+      block: { body: 'translate(-2 0)', arm: -12, robe: 'idle', boots: [15, 35, 98], shadow: 22, shield: true },
+      melee: { body: 'translate(4 0) rotate(6 25 98)', arm: -4, robe: 'walk', boots: [10, 40, 98], shadow: 22, slash: true },
+      cast: { body: 'rotate(-3 25 98)', arm: -48, robe: 'idle', boots: [15, 35, 98], shadow: 22, orb: true },
+      hit: { body: 'translate(-5 0) rotate(-9 25 98)', arm: 75, robe: 'walk', boots: [17, 33, 98], shadow: 22, white: true },
+      ko: { body: 'translate(25 -22) rotate(-90 25 97)', arm: 95, robe: 'idle', boots: [17, 33, 98], shadow: 32, ko: true }
+    };
+    const house = PAL[this.props.house] ? this.props.house : 'ember';
+    const p = POSES[this.props.pose] || POSES.idle;
+    const sc = Number(this.props.scale);
+    const scale = Number.isFinite(sc) && sc > 0 ? sc : 2;
+    let c = Object.assign({}, PAL[house], { hatPath: HATS[house], hairPath: HAIR[house] });
+    if (p.white) {
+      c = Object.assign({}, c, { robe: '#FFFFFF', dark: '#DCE5FF', trim: '#FFFFFF', hat: '#F2F5FF', band: '#DCE5FF', skin: '#FFFFFF', hair: '#EEF2FF', glow: '#FFFFFF' });
+    }
+    const show = (b) => (b ? 'inline' : 'none');
+    const hbOn = this.props.hitbox === true || this.props.hitbox === 'true';
+    return {
+      w: Math.round(140 * scale), h: Math.round(165 * scale), c,
+      flip: this.props.facing === 'left' ? 'matrix(-1 0 0 1 50 0)' : 'matrix(1 0 0 1 0 0)',
+      bodyT: p.body, armT: 'rotate(' + p.arm + ' 31 50)',
+      robePath: ROBES[p.robe][0], hemPath: ROBES[p.robe][1],
+      boot1: p.boots[0], boot2: p.boots[1], bootY: p.boots[2], shadowRx: p.shadow,
+      eyesOpen: show(!p.ko), eyesKo: show(!!p.ko), koFx: show(!!p.ko),
+      orb: show(!!p.orb), slash: show(!!p.slash), shield: show(!!p.shield), hitFx: show(!!p.white),
+      hb: show(hbOn), hbY: p.hbY || 0
+    };
+  }
+}
+</script>
+</body>
+</html>

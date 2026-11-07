@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — Pitch — gameplay</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 960px; height: 540px; position: relative; overflow: hidden; background: #15142C; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4">
+<div style="position: absolute; left: 56px; top: 40px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 700; letter-spacing: 4px; color: #F2C879">GAMEPLAY</span>
+<h1 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 34px; line-height: 1.1; color: #F5C542">The duel, frame by frame</h1>
+</div>
+<div style="position: absolute; left: 56px; top: 118px; width: 672px; height: 378px; overflow: hidden; border-radius: 8px; border: 2px solid #4A4552">
+<div style="width: 960px; height: 540px; transform: scale(0.7); transform-origin: 0 0"><dc-import name="Arena" hint-size="960px,540px"></dc-import></div>
+</div>
+<span style="position: absolute; left: 372px; top: 358px; width: 26px; height: 26px; border-radius: 50%; background: #F5C542; color: #2B2420; border: 2px solid #15142C; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">1</span>
+<span style="position: absolute; left: 218px; top: 442px; width: 26px; height: 26px; border-radius: 50%; background: #F5C542; color: #2B2420; border: 2px solid #15142C; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">2</span>
+<span style="position: absolute; left: 437px; top: 179px; width: 26px; height: 26px; border-radius: 50%; background: #F5C542; color: #2B2420; border: 2px solid #15142C; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">3</span>
+<span style="position: absolute; left: 379px; top: 122px; width: 26px; height: 26px; border-radius: 50%; background: #F5C542; color: #2B2420; border: 2px solid #15142C; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">4</span>
+<div style="position: absolute; left: 752px; top: 118px; width: 172px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 3px"><div style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #F5C542; color: #2B2420; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0">1</span><span style="font-size: 16px; font-weight: 700">Spells glow in fixed colors</span></div><span style="font-size: 14px; line-height: 1.35; color: #E6DCF0">Blue bolt, orange fireball: readable on any background.</span></div>
+<div style="display: flex; flex-direction: column; gap: 3px"><div style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #F5C542; color: #2B2420; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0">2</span><span style="font-size: 16px; font-weight: 700">Fighters stay 50 × 100</span></div><span style="font-size: 14px; line-height: 1.35; color: #E6DCF0">Floor sits 80 px from the bottom, as in the prototype.</span></div>
+<div style="display: flex; flex-direction: column; gap: 3px"><div style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #F5C542; color: #2B2420; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0">3</span><span style="font-size: 16px; font-weight: 700">The hall feels alive</span></div><span style="font-size: 14px; line-height: 1.35; color: #E6DCF0">Floating candles and drifting dust, kept dim behind the action.</span></div>
+<div style="display: flex; flex-direction: column; gap: 3px"><div style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #F5C542; color: #2B2420; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0">4</span><span style="font-size: 16px; font-weight: 700">HUD stays at the edges</span></div><span style="font-size: 14px; line-height: 1.35; color: #E6DCF0">Health, round pips and cooldowns never cover the fight.</span></div>
+</div>
+<span style="position: absolute; right: 32px; bottom: 20px; font-size: 13px; font-weight: 600; letter-spacing: 2px; color: #BDB4CF">5 / 7</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":540}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
