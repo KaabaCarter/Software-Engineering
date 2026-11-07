@@ -7,6 +7,12 @@ off in a castle arena using melee attacks, blocks and spells — first to win
 > The wizard artwork follows the team's Claude Design canvas (see
 > [`design/`](design/)) and is drawn with Pygame shapes, so no image files are needed.
 
+## Play in your browser
+
+**https://youmbofatimaane.github.io/Software-Engineering/**: no install needed.
+Click the page to start (browsers only allow sound after a click). It needs a
+keyboard, so play it on a computer.
+
 ## Requirements
 
 - Python 3.9+
@@ -118,6 +124,20 @@ To add a wizard:
    its `speed`, `power`, optional `health`, and a `signature` spell from
    `SIGNATURE_SPELLS` (or add a new one there).
 
+## Building the web version
+
+The browser version is made with [pygbag](https://pypi.org/project/pygbag/),
+which runs Python and pygame in the browser.
+
+```bash
+pip install pygbag certifi
+bash web/build.sh            # builds web/dist/
+bash web/build.sh --serve    # builds, then serves it at http://localhost:8000
+```
+
+To update the public link, publish the contents of `web/dist/` to the
+`gh-pages` branch of the repo that hosts the GitHub Pages site.
+
 ## Project files
 
 | Path | What it is |
@@ -125,6 +145,9 @@ To add a wizard:
 | `wizard_duel.py` | The game: settings, fighters, rounds, menus |
 | `wizard_art.py` | Wizard artwork and poses (idle, walk, jump, block, strike, cast, hit, KO) |
 | `sound.py` | Sound effects and music, generated from simple waveforms |
+| `main.py` | Entry point for the browser build (also runs the game) |
+| `assets/fonts/` | Cinzel and Barlow Semi Condensed (SIL Open Font License, see the OFL files) |
+| `web/` | Browser page template and build script |
 | `scene_art.py` | Color theme, castle hall, candles, spells, particles, keycaps and buttons |
 | `design/` | Source of the Claude Design canvas (screens, style guide, pitch deck) |
 

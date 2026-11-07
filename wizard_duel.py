@@ -7,6 +7,7 @@ Run:  pip install pygame
 Wizard artwork lives in wizard_art.py; the arena, spells and UI pieces in
 scene_art.py (both drawn from the Claude Design canvas).
 """
+import asyncio
 import json
 import os
 import sys
@@ -47,6 +48,7 @@ NAME_FONT = art.load_font("display", 22)
 BODY_FONT = art.load_font("body", 22)
 SMALL_FONT = art.load_font("body", 16)
 KEY_FONT = art.load_font("body", 15)
+TINY_FONT = art.load_font("body", 13)   # key bar fallback when a font is wide (e.g. in a browser)
 
 # ---------------- Night / Day mode ----------------
 SETTINGS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "settings.json")
@@ -831,17 +833,24 @@ class Game:
                 slot = names[0] if names[0] in glows else None
                 parts.append(([key_label(CONTROLS[p][n]) for n in names], short,
                               (slot, names, glows.get(slot))))
-            total = self.hint_width(parts, h, gap, KEY_FONT)
+            # Fit each player's bar in its half of the screen, whatever font is available
+            room = WIDTH // 2 - 30
+            for gap, font in ((7, KEY_FONT), (4, KEY_FONT), (4, TINY_FONT), (2, TINY_FONT)):
+                total = self.hint_width(parts, h, gap, font)
+                if total <= room:
+                    break
             x = 18 if p == 0 else WIDTH - 18 - total
             strip = pygame.Surface((total + 20, h + 14), pygame.SRCALPHA)
             strip.fill(art.rgba(THEME["panel"], 170))
             surf.blit(strip, (x - 10, y - 7))
-            self.draw_hint_row(surf, parts, x, y, h, gap, fighter=p, font=KEY_FONT)
+            self.draw_hint_row(surf, parts, x, y, h, gap, fighter=p, font=font)
         art.text(surf, "Esc  pause     Tab  hide keys", KEY_FONT, THEME["text_muted"],
                  (WIDTH // 2, GROUND_Y + 16), shadow=False)
 
 
-def main():
+async def main():
+    """The game loop. It is async so the same code also runs in a web browser
+    (pygbag), where each frame must hand control back to the page."""
     game = Game()
     while game.running:
         for event in pygame.event.get():
@@ -851,9 +860,11 @@ def main():
         screen.blit(canvas, (0, 0))
         pygame.display.flip()
         clock.tick(FPS)
+        await asyncio.sleep(0)
     pygame.quit()
-    sys.exit()
+    if sys.platform != "emscripten":      # in a browser, just stop
+        sys.exit()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

@@ -7,7 +7,7 @@ computer has no audio device, sound is silently turned off.
 import array
 import math
 import random
-import threading
+import time
 import pygame
 
 RATE = 22050
@@ -17,7 +17,7 @@ SOUNDS = {}
 VOLUMES = {}
 music = None
 music_channel = None
-_music_samples = None      # filled by a background thread, turned into a Sound by poll()
+_composer = None           # music being built a little each frame by poll()
 
 
 def init_mixer():
@@ -104,25 +104,60 @@ def _pluck(freq, dur, decay=0.35):
     return out
 
 
-def _build_music():
-    """A gentle 8-bar loop in A minor: music-box arpeggios over soft bass notes."""
+def _compose_music():
+    """A gentle 8-bar loop in A minor: music-box arpeggios over soft bass notes.
+
+    A generator: it yields after each note so the work can be spread over
+    many frames (browsers can't build it on a background thread).
+    """
     beat = 60 / 96 / 2                       # eighth notes at 96 bpm
     chords = [(57, 60, 64), (53, 57, 60), (48, 52, 55), (52, 56, 59),   # Am F C E
               (57, 60, 64), (50, 53, 57), (52, 56, 59), (57, 60, 64)]   # Am Dm E Am
     pattern = [0, 1, 2, 1, 2, 1]             # 3/4 time, six eighths per bar
     length = int(len(chords) * len(pattern) * beat * RATE)
     out = [0.0] * length
+    cache = {}                               # each pitch is synthesized once
+
+    chunk = 2000                             # samples per step, so no frame stalls
+
+    def add(start, midi, dur, decay, gain):
+        key = (midi, dur, decay)
+        if key not in cache:
+            freq, n, samples = _note(midi), int(RATE * dur), []
+            for c0 in range(0, n, chunk):
+                for i in range(c0, min(n, c0 + chunk)):
+                    t = i / RATE
+                    v = math.sin(2 * math.pi * freq * t) + \
+                        0.35 * math.sin(2 * math.pi * freq * 3 * t) * math.exp(-t / 0.08)
+                    samples.append(v * _env(i, n, attack=0.003, release=decay))
+                yield
+            cache[key] = samples
+        note = cache[key]
+        for c0 in range(0, len(note), chunk * 2):
+            for i in range(c0, min(len(note), c0 + chunk * 2)):
+                out[(start + i) % length] += gain * note[i]
+            yield
+
     for bar, chord in enumerate(chords):
+        yield from add(int(bar * len(pattern) * beat * RATE), chord[0] - 12, 1.6, 0.7, 0.6)
         for step, idx in enumerate(pattern):
-            start = int((bar * len(pattern) + step) * beat * RATE)
-            note = _pluck(_note(chord[idx] + 12), 0.9, decay=0.3)
-            for i, s in enumerate(note):
-                out[(start + i) % length] += 0.5 * s
-        start = int(bar * len(pattern) * beat * RATE)
-        bass = _pluck(_note(chord[0] - 12), 1.6, decay=0.7)
-        for i, s in enumerate(bass):
-            out[(start + i) % length] += 0.6 * s
-    return out
+            yield from add(int((bar * len(pattern) + step) * beat * RATE), chord[idx] + 12, 0.9, 0.3, 0.5)
+
+    # Convert to 16-bit audio, also in steps
+    peak = 1e-6
+    for c0 in range(0, length, chunk * 4):
+        peak = max(peak, max(abs(v) for v in out[c0:c0 + chunk * 4]))
+        yield
+    scale = 32000 * 0.8 / max(1.0, peak)
+    stereo = pygame.mixer.get_init()[2] == 2
+    data = array.array("h")
+    for c0 in range(0, length, chunk * 4):
+        for v in out[c0:c0 + chunk * 4]:
+            data.append(int(v * scale))
+            if stereo:
+                data.append(int(v * scale))
+        yield
+    return data
 
 
 def _build_sounds():
@@ -165,23 +200,26 @@ def load():
         music_channel = pygame.mixer.Channel(0)
         pygame.mixer.set_reserved(1)             # keep channel 0 for the music
         available = True
-        threading.Thread(target=_compose, daemon=True).start()   # music takes ~1 s to build
+        global _composer
+        _composer = _compose_music()
     except (pygame.error, NotImplementedError):
         available = False
 
 
-def _compose():
-    global _music_samples
-    _music_samples = _build_music()
-
-
-def poll():
-    """Call once per frame: starts the music as soon as it has been built."""
-    global music, _music_samples
-    if available and music is None and _music_samples is not None:
-        music = _make(_music_samples, 0.8)
+def poll(budget=0.006):
+    """Call once per frame: builds the music a few milliseconds at a time,
+    then starts it. Keeps frames smooth while the tune is being made."""
+    global music, _composer
+    if not available or _composer is None:
+        return
+    deadline = time.perf_counter() + budget
+    try:
+        while time.perf_counter() < deadline:
+            next(_composer)
+    except StopIteration as done:
+        _composer = None
+        music = pygame.mixer.Sound(buffer=done.value.tobytes())
         music.set_volume(MUSIC_LEVEL)
-        _music_samples = None
         start_music()
 
 
