@@ -15,8 +15,10 @@ from pygame import gfxdraw
 import wizard_art
 from wizard_art import draw_wizard, LOOKS
 import scene_art as art
+import sound
 from scene_art import THEME
 
+sound.init_mixer()
 pygame.init()
 
 # ---------------- Settings ----------------
@@ -78,6 +80,8 @@ def apply_mode(mode):
 
 
 apply_mode(load_settings().get("mode", "night"))
+sound.enabled = load_settings().get("sound", True)
+sound.load()
 
 # Playable wizards (FR3)
 # "look" picks the artwork in wizard_art.LOOKS. "power" multiplies spell damage.
@@ -276,6 +280,7 @@ class Fighter:
             damage *= BLOCK_REDUCTION
         self.health = max(0, self.health - damage)   # FR6
         self.hit_flash = 8
+        sound.play("block" if self.blocking else "hit")
         x, y = at or (self.rect.centerx, self.rect.y + 45)
         art.burst(self.fx, x, y, (159, 211, 255) if self.blocking else (color or THEME["gold_bright"]))
 
@@ -329,6 +334,7 @@ class Fighter:
         if keys[c["attack"]] and self.cooldowns["attack"] == 0:
             self.attack_timer = 8
             self.cooldowns["attack"] = MELEE_COOLDOWN
+            sound.play("swing")
             box = self.attack_box()
             if box.colliderect(other.rect):
                 other.take_hit(MELEE_DAMAGE, box.clip(other.rect).center)
@@ -338,6 +344,7 @@ class Fighter:
             if keys[c[slot]] and self.cooldowns[slot] == 0:
                 spell = self.spell(slot)
                 self.cast(spell, projectiles)
+                sound.play(spell["kind"])
                 self.cooldowns[slot] = spell["cooldown"]
                 self.cast_timer = 12
 
@@ -412,6 +419,12 @@ class Game:
         mode = "day" if art.MODE == "night" else "night"
         apply_mode(mode)
         save_settings({**load_settings(), "mode": mode})
+        sound.play("click")
+
+    def toggle_sound(self):
+        sound.set_enabled(not sound.enabled)
+        save_settings({**load_settings(), "sound": sound.enabled})
+        sound.play("confirm")
 
     def start_match(self):
         self.p1 = Fighter(200, WIZARDS[self.choice[0]], CONTROLS[0], 1)
@@ -443,20 +456,26 @@ class Game:
             if k == pygame.K_RETURN:
                 self.ready = [False, False]
                 self.state = "select"
+                sound.play("confirm")
             elif k == pygame.K_c:
                 self.state = "controls"
+                sound.play("click")
             elif k == pygame.K_l:
                 self.toggle_mode()
+            elif k == pygame.K_v:
+                self.toggle_sound()
             elif k == pygame.K_ESCAPE:
                 self.running = False
 
         elif self.state == "controls":
             if k in (pygame.K_ESCAPE, pygame.K_RETURN):
                 self.state = "menu"
+                sound.play("click")
 
         elif self.state == "select":                           # character select
             if k == pygame.K_ESCAPE:
                 self.state = "menu"
+                sound.play("click")
                 return
             for i in (0, 1):
                 c = CONTROLS[i]
@@ -464,33 +483,44 @@ class Game:
                     continue
                 if sc == c["left"]:
                     self.choice[i] = (self.choice[i] - 1) % len(WIZARDS)
+                    sound.play("click")
                 elif sc == c["right"]:
                     self.choice[i] = (self.choice[i] + 1) % len(WIZARDS)
+                    sound.play("click")
                 elif sc == c["attack"]:
                     self.ready[i] = True
+                    sound.play("confirm")
             if all(self.ready):
                 self.start_match()
 
         elif self.state == "fight":                            # pause (FR11)
             if k == pygame.K_ESCAPE:
                 self.paused = not self.paused
+                sound.play("pause")
             elif k == pygame.K_TAB:
                 self.show_keys = not self.show_keys
+                sound.play("click")
             elif self.paused and k == pygame.K_l:
                 self.toggle_mode()
+            elif self.paused and k == pygame.K_v:
+                self.toggle_sound()
             elif self.paused and k == pygame.K_q:
                 self.state = "menu"
+                sound.play("click")
 
         elif self.state == "match_over":                       # winner screen (FR10)
             if k == pygame.K_RETURN:
                 self.start_match()
+                sound.play("confirm")
             elif k == pygame.K_m:
                 self.state = "menu"
+                sound.play("click")
 
     # ----- Logic -----
     def update(self, keys):
         self.keys = keys
         self.tick += 1
+        sound.poll()
         self.ambient.update()
         art.update_particles(self.fx)
         if self.state in ("fight", "round_over", "match_over") and not self.paused:
@@ -519,9 +549,12 @@ class Game:
                     self.message = f"{self.p2.wizard['name']} wins the round!"
                 self.state = "round_over"
                 self.timer = 2 * FPS
+                sound.play("ko")
 
         elif self.state == "round_over":
             self.timer -= 1
+            if self.timer == FPS and self.round_winner and max(self.wins) < ROUNDS_TO_WIN:
+                sound.play("round_win")
             if self.timer <= 0:
                 if max(self.wins) >= ROUNDS_TO_WIN:            # FR8
                     winner = self.p1 if self.wins[0] > self.wins[1] else self.p2
@@ -529,6 +562,7 @@ class Game:
                     self.round_winner = winner
                     self.message = f"Player {num} ({winner.wizard['name']}) wins!"
                     self.state = "match_over"
+                    sound.play("victory")
                 else:
                     self.start_round()
 
@@ -555,9 +589,10 @@ class Game:
         art.text(surf, "TWO WIZARDS  ·  ONE KEYBOARD  ·  BEST OF THREE", SMALL_FONT,
                  THEME["text"], (WIDTH // 2, 196))
         other_mode = "Day mode" if art.MODE == "night" else "Night mode"
-        items = (("Play", "Enter"), ("Controls", "C"), (other_mode, "L"), ("Quit", "Esc"))
+        items = (("Play", "Enter"), ("Controls", "C"), (other_mode, "L"),
+                 ("Sound: on" if sound.enabled else "Sound: off", "V"), ("Quit", "Esc"))
         for i, (label, key) in enumerate(items):
-            art.button(surf, (350, 232 + i * 58, 260, 48), label, key, BODY_FONT, KEY_FONT, selected=i == 0)
+            art.button(surf, (350, 222 + i * 50, 260, 42), label, key, BODY_FONT, KEY_FONT, selected=i == 0)
 
     def draw_controls(self, surf):
         art.dim(surf, 150)
@@ -656,12 +691,13 @@ class Game:
 
     def draw_pause(self, surf):
         art.dim(surf, 150)
-        art.panel(surf, (300, 96, 360, 348))
-        art.text(surf, "Paused", HEAD_FONT, THEME["heading"], (WIDTH // 2, 140))
+        art.panel(surf, (300, 70, 360, 380))
+        art.text(surf, "Paused", HEAD_FONT, THEME["heading"], (WIDTH // 2, 112))
         items = (("Resume", "Esc"), ("Hide keys" if self.show_keys else "Show keys", "Tab"),
-                 ("Day mode" if art.MODE == "night" else "Night mode", "L"), ("Quit to menu", "Q"))
+                 ("Day mode" if art.MODE == "night" else "Night mode", "L"),
+                 ("Sound: on" if sound.enabled else "Sound: off", "V"), ("Quit to menu", "Q"))
         for i, (label, key) in enumerate(items):
-            art.button(surf, (330, 180 + i * 62, 300, 50), label, key, BODY_FONT, KEY_FONT, selected=i == 0)
+            art.button(surf, (330, 150 + i * 58, 300, 48), label, key, BODY_FONT, KEY_FONT, selected=i == 0)
 
     def draw_round_over(self, surf):
         art.dim(surf, 70)

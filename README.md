@@ -56,6 +56,14 @@ they recharge and glow when ready. Press **Tab** to hide or show it.
 
 **Esc** pauses the match; while paused, **Q** quits to the menu.
 
+## Sound
+
+Spells, hits, blocks, knockouts, round wins and menus all have sound effects,
+with a quiet music-box tune in the background. Every sound is generated in
+code (`sound.py`), so there are no audio files. Press **V** on the main menu
+or pause menu to turn sound on or off; the choice is remembered. On a
+computer without an audio device the game simply plays silently.
+
 ## Night and Day
 
 Press **L** on the main menu or in the pause menu to switch between **Night**
@@ -116,6 +124,7 @@ To add a wizard:
 |------|------------|
 | `wizard_duel.py` | The game: settings, fighters, rounds, menus |
 | `wizard_art.py` | Wizard artwork and poses (idle, walk, jump, block, strike, cast, hit, KO) |
+| `sound.py` | Sound effects and music, generated from simple waveforms |
 | `scene_art.py` | Color theme, castle hall, candles, spells, particles, keycaps and buttons |
 | `design/` | Source of the Claude Design canvas (screens, style guide, pitch deck) |
 
