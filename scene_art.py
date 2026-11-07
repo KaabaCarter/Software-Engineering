@@ -30,6 +30,7 @@ THEMES = {
         "button_hi": "#EFE3C8", "button_hi_text": "#2B2420", "floor_shadow": "#080610",
         "key": "#2B2420", "key_edge": "#5A4E44", "key_lip": "#0F0C0A", "key_text": "#EFE3C8",
         "stun": "#5FD0FF", "fire": "#FF8A1F", "fire_core": "#FFC23D", "fire_hot": "#FFF3C4",
+        "vine": "#5BD67A", "arcane": "#B48CFF", "quake": "#E0B04A",
         "spell_outline": False, "danger": "#FFB347", "lag": "#E9A24A", "pip_empty": "#0B0914",
     },
     "day": {
@@ -46,6 +47,7 @@ THEMES = {
         "button_hi": "#2B2420", "button_hi_text": "#F5ECDA", "floor_shadow": "#6E6253",
         "key": "#2B2420", "key_edge": "#5A4E44", "key_lip": "#0F0C0A", "key_text": "#EFE3C8",
         "stun": "#1E9FD8", "fire": "#F06A0A", "fire_core": "#FFB21F", "fire_hot": "#FFF0B8",
+        "vine": "#2E8B45", "arcane": "#7A4FD6", "quake": "#9A6B12",
         "spell_outline": True, "danger": "#D9480F", "lag": "#E9A24A", "pip_empty": "#F5ECDA",
     },
 }
@@ -253,6 +255,73 @@ def draw_fire_blast(surf, x, y, direction, tick):
     gfxdraw.filled_circle(surf, int(x + direction * 4), int(y - 1), 5, THEME["fire_hot"])
     if THEME["spell_outline"]:
         gfxdraw.aacircle(surf, int(x), int(y), 15, mix(THEME["fire"], (0, 0, 0), 0.5))
+
+
+def draw_vine_snare(surf, x, y, direction, tick):
+    """A thorny seed pod trailing curling vines."""
+    c = THEME["vine"]
+    dark = mix(c, (0, 0, 0), 0.45)
+    for k in range(3):                                   # three wavy tendrils behind it
+        pts = []
+        for s in range(9):
+            px = x - direction * s * 5
+            py = y + (k - 1) * 6 + 4 * math.sin(tick * 0.4 + s * 0.9 + k)
+            pts.append((px, py))
+        pygame.draw.lines(surf, dark if k == 1 else c, False, pts, 2)
+    gfxdraw.filled_circle(surf, int(x), int(y), 15, rgba(c, 50))
+    gfxdraw.filled_circle(surf, int(x), int(y), 9, dark)
+    gfxdraw.filled_circle(surf, int(x), int(y), 6, c)
+    for a in range(0, 360, 60):                          # thorns
+        r = math.radians(a + tick * 6)
+        pygame.draw.line(surf, dark, (x + 8 * math.cos(r), y + 8 * math.sin(r)),
+                         (x + 13 * math.cos(r), y + 13 * math.sin(r)), 2)
+    if THEME["spell_outline"]:
+        gfxdraw.aacircle(surf, int(x), int(y), 10, dark)
+
+
+def draw_arcane_bolt(surf, x, y, direction, tick):
+    """Small violet shard with a short glowing tail."""
+    c = THEME["arcane"]
+    tail = [(x, y - 4), (x - direction * 26, y), (x, y + 4)]
+    gfxdraw.filled_polygon(surf, [(round(px), round(py)) for px, py in tail], rgba(c, 130))
+    gfxdraw.filled_circle(surf, int(x), int(y), 10, rgba(c, 60))
+    shard = [(x + direction * 8, y), (x, y - 5), (x - direction * 6, y), (x, y + 5)]
+    pygame.draw.polygon(surf, c, shard)
+    gfxdraw.filled_circle(surf, int(x), int(y), 2, WHITE)
+    if THEME["spell_outline"]:
+        pygame.draw.polygon(surf, mix(c, (0, 0, 0), 0.5), shard, 1)
+
+
+def draw_shockwave(surf, x, ground_y, direction, tick):
+    """Rock spikes bursting out of the floor as the wave rolls forward."""
+    c = THEME["quake"]
+    dark = mix(c, (0, 0, 0), 0.5)
+    gfxdraw.filled_ellipse(surf, int(x), int(ground_y - 4), 34, 12, rgba(c, 45))
+    for k in range(4):
+        px = x - direction * k * 11
+        h = max(6, 26 - k * 6 + 3 * math.sin(tick * 0.8 + k))
+        spike = [(px - 7, ground_y), (px + direction * 2, ground_y - h), (px + 7, ground_y)]
+        pygame.draw.polygon(surf, c if k % 2 == 0 else dark, spike)
+        pygame.draw.polygon(surf, dark, spike, 1)
+
+
+def draw_snare(surf, cx, ground_y, tick):
+    """Vines wrapped around a slowed wizard's feet."""
+    c = THEME["vine"]
+    dark = mix(c, (0, 0, 0), 0.45)
+    for k in range(3):
+        y = ground_y - 6 - k * 9
+        pygame.draw.ellipse(surf, dark if k % 2 else c, (cx - 22, y - 4, 44, 9), 2)
+    for k in range(4):
+        a = math.radians(tick * 4 + k * 90)
+        lx, ly = cx + 20 * math.cos(a), ground_y - 14 + 4 * math.sin(a)
+        gfxdraw.filled_ellipse(surf, int(lx), int(ly), 4, 2, c)
+
+
+def spawn_dust(fx, x, ground_y, color):
+    fx.append(Particle(x + random.uniform(-10, 10), ground_y - random.uniform(0, 6),
+                       random.uniform(-0.6, 0.6), random.uniform(-1.4, -0.4),
+                       color, random.randint(12, 22), 3, 0.06))
 
 
 def spawn_embers(fx, x, y, direction):

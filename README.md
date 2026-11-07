@@ -42,7 +42,7 @@ python wizard_duel.py
 | Block       | S        | ↓           |
 | Attack      | F        | `,`         |
 | Stun Bolt   | G        | `.`         |
-| Fire Blast  | H        | `/`         |
+| Signature spell | H    | `/`         |
 
 Keys are set by their **position** on the keyboard, not by letter, so the
 controls sit in the same place on any layout. The table shows a US (QWERTY)
@@ -75,16 +75,23 @@ On the character select screen, use your left/right keys to browse wizards.
 
 ## Combat
 
-| Move       | Damage | Cooldown |
-|------------|--------|----------|
-| Attack     | 6      | 0.5 s    |
-| Stun Bolt  | 8      | 0.75 s   |
-| Fire Blast | 15     | 2.5 s    |
+| Move                  | Who      | Damage    | Cooldown | Effect |
+|-----------------------|----------|-----------|----------|--------|
+| Wand strike           | Everyone | 6         | 0.5 s    | Close range |
+| Stun Bolt             | Everyone | 8         | 0.75 s   | Fast bolt |
+| Fire Blast            | Ember    | 16        | 2 s      | Big, slow fireball |
+| Vine Snare            | Sage     | 11        | 2.5 s    | Halves the target's speed for 1.5 s (not if blocked) |
+| Arcane Volley         | Quill    | 3 × 5     | 2 s      | Three quick bolts in a spread |
+| Shockwave             | Bramble  | 13        | 2.5 s    | Rolls along the floor; jump over it to dodge |
+
+Every wizard has Stun Bolt plus their own **signature spell** on the second
+spell key. All spell numbers are in `STUN_BOLT` and `SIGNATURE_SPELLS` at the
+top of `wizard_duel.py`.
 
 - Spell damage is multiplied by the wizard's spell power.
 - Blocking reduces incoming damage to 25%, but you can't move or attack while
   blocking (and can only block on the ground).
-- Spell recharge is shown on the Stun and Fire keys in the key bar.
+- Spell recharge is shown on the Stun and signature-spell keys in the key bar.
 - The amber strip on a health bar shows the damage just taken.
 - If both wizards hit 0 health at the same time it's a Double KO and no one
   scores the round.
@@ -100,7 +107,8 @@ To add a wizard:
 1. Add a look to `LOOKS` in `wizard_art.py` (palette plus hat, hair and
    optional beard shapes, in the 50 × 100 hitbox coordinates).
 2. Add an entry to `WIZARDS` in `wizard_duel.py` pointing at that look, with
-   its `speed`, `power` and optional `health`.
+   its `speed`, `power`, optional `health`, and a `signature` spell from
+   `SIGNATURE_SPELLS` (or add a new one there).
 
 ## Project files
 

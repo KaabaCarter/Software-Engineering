@@ -81,20 +81,31 @@ apply_mode(load_settings().get("mode", "night"))
 
 # Playable wizards (FR3)
 # "look" picks the artwork in wizard_art.LOOKS. "power" multiplies spell damage.
+# "signature" picks the wizard's own second spell from SIGNATURE_SPELLS.
 WIZARDS = [
-    {"name": "Ember", "look": "ember", "speed": 6, "power": 1.0, "health": 100},
-    {"name": "Sage", "look": "sage", "speed": 5, "power": 1.25, "health": 100},
-    {"name": "Quill", "look": "quill", "speed": 5.5, "power": 1.1, "health": 100},
-    {"name": "Bramble", "look": "bramble", "speed": 4.5, "power": 1.1, "health": 120},
+    {"name": "Ember", "look": "ember", "speed": 6, "power": 1.0, "health": 100, "signature": "fire"},
+    {"name": "Sage", "look": "sage", "speed": 5, "power": 1.25, "health": 100, "signature": "vines"},
+    {"name": "Quill", "look": "quill", "speed": 5.5, "power": 1.1, "health": 100, "signature": "volley"},
+    {"name": "Bramble", "look": "bramble", "speed": 4.5, "power": 1.1, "health": 120, "signature": "quake"},
 ]
 
-# Two spells per character (FR5). Cooldowns are in frames (60 = 1 second).
-SPELLS = {
-    "spell1": {"name": "Stun Bolt", "kind": "stun", "damage": 8, "speed": 12, "radius": 8,
-               "cooldown": 45, "color": THEME["stun"]},
-    "spell2": {"name": "Fire Blast", "kind": "fire", "damage": 15, "speed": 8, "radius": 14,
-               "cooldown": 150, "color": THEME["fire"]},
+# Two spells per character (FR5): Stun Bolt for everyone, plus a signature spell.
+# Cooldowns and "slow" are in frames (60 = 1 second). "color" names a THEME color.
+STUN_BOLT = {"name": "Stun Bolt", "short": "Stun", "kind": "stun", "damage": 8, "speed": 12,
+             "radius": 8, "cooldown": 45, "color": "stun"}
+SIGNATURE_SPELLS = {
+    "fire":   {"name": "Fire Blast", "short": "Fire", "about": "big, slow fireball",
+               "kind": "fire", "damage": 16, "speed": 8, "radius": 14, "cooldown": 120, "color": "fire"},
+    "vines":  {"name": "Vine Snare", "short": "Vines", "about": "slows the foe",
+               "kind": "vines", "damage": 11, "speed": 7, "radius": 12, "cooldown": 150, "color": "vine",
+               "slow": 90},
+    "volley": {"name": "Arcane Volley", "short": "Volley", "about": "three quick bolts",
+               "kind": "volley", "damage": 5, "speed": 13, "radius": 6, "cooldown": 120, "color": "arcane",
+               "count": 3},
+    "quake":  {"name": "Shockwave", "short": "Quake", "about": "rolls along the floor; jump it",
+               "kind": "quake", "damage": 13, "speed": 7, "radius": 14, "cooldown": 150, "color": "quake"},
 }
+SLOW_FACTOR = 0.5          # Vine Snare halves movement speed while it lasts
 
 # Key bindings for each player (FR1).
 # These are PHYSICAL key positions (scancodes), named after a US QWERTY keyboard,
@@ -117,7 +128,7 @@ ACTIONS = [
     (("block",), "Block", "Block (shield)"),
     (("attack",), "Strike", "Wand strike"),
     (("spell1",), "Stun", "Stun Bolt"),
-    (("spell2",), "Fire", "Fire Blast"),
+    (("spell2",), "Spell", "Signature spell"),
 ]
 
 
@@ -179,38 +190,47 @@ def name_color(wizard):
 
 # ---------------- Spell projectile ----------------
 class Projectile:
-    def __init__(self, owner, spell, x, y, direction, power):
+    DRAW = {"stun": art.draw_stun_bolt, "fire": art.draw_fire_blast,
+            "vines": art.draw_vine_snare, "volley": art.draw_arcane_bolt, "quake": art.draw_shockwave}
+
+    def __init__(self, owner, spell, x, y, direction, power, vy=0.0):
         self.owner = owner
+        self.spell = spell
         self.x, self.y = x, y
+        self.vy = vy
         self.dir = direction
         self.kind = spell["kind"]
         self.speed = spell["speed"]
         self.radius = spell["radius"]
-        self.color = spell["color"]
         self.damage = spell["damage"] * power
         self.alive = True
         self.tick = 0
 
     def rect(self):
+        if self.kind == "quake":               # hugs the floor, so jumping dodges it
+            return pygame.Rect(self.x - 16, GROUND_Y - 22, 32, 22)
         r = self.radius
         return pygame.Rect(self.x - r, self.y - r, r * 2, r * 2)
 
     def update(self, target):
         self.x += self.speed * self.dir
+        self.y += self.vy
         self.tick += 1
+        color = THEME[self.spell["color"]]
         if self.kind == "fire" and self.tick % 2 == 0:
             art.spawn_embers(self.owner.fx, self.x, self.y, self.dir)
+        elif self.kind == "quake" and self.tick % 3 == 0:
+            art.spawn_dust(self.owner.fx, self.x, GROUND_Y, color)
         if self.x < -50 or self.x > WIDTH + 50:
             self.alive = False
         elif self.rect().colliderect(target.rect):
-            target.take_hit(self.damage, (self.x, self.y), self.color)
+            if self.spell.get("slow") and not target.blocking:
+                target.slow_timer = self.spell["slow"]
+            target.take_hit(self.damage, self.rect().center, color)
             self.alive = False
 
     def draw(self, surf):
-        if self.kind == "fire":
-            art.draw_fire_blast(surf, self.x, self.y, self.dir, self.tick)
-        else:
-            art.draw_stun_bolt(surf, self.x, self.y, self.dir, self.tick)
+        self.DRAW[self.kind](surf, self.x, self.y, self.dir, self.tick)
 
 
 # ---------------- Fighter ----------------
@@ -238,6 +258,7 @@ class Fighter:
         self.attack_timer = 0
         self.hit_flash = 0
         self.cast_timer = 0
+        self.slow_timer = 0          # Vine Snare
         self.moving = False
         self.anim = 0
         self.cooldowns = {"attack": 0, "spell1": 0, "spell2": 0}
@@ -271,17 +292,20 @@ class Fighter:
             self.hit_flash -= 1
         if self.cast_timer > 0:
             self.cast_timer -= 1
+        if self.slow_timer > 0:
+            self.slow_timer -= 1
         self.anim += 1
+        speed = self.wizard["speed"] * (SLOW_FACTOR if self.slow_timer > 0 else 1)
 
         # Movement, jump, block (FR4). Can't move while blocking.
         self.blocking = keys[c["block"]] and self.on_ground()
         self.moving = False
         if not self.blocking:
             if keys[c["left"]]:
-                self.x -= self.wizard["speed"]
+                self.x -= speed
                 self.moving = True
             if keys[c["right"]]:
-                self.x += self.wizard["speed"]
+                self.x += speed
                 self.moving = not self.moving   # both keys held = standing still
             if keys[c["jump"]] and self.on_ground():
                 self.vy = JUMP_SPEED
@@ -312,16 +336,30 @@ class Fighter:
         # Spells (FR5)
         for slot in ("spell1", "spell2"):
             if keys[c[slot]] and self.cooldowns[slot] == 0:
-                spell = SPELLS[slot]
-                x = self.rect.centerx + self.facing * 50
-                projectiles.append(Projectile(self, spell, x, self.rect.y + 45,
-                                              self.facing, self.wizard["power"]))
+                spell = self.spell(slot)
+                self.cast(spell, projectiles)
                 self.cooldowns[slot] = spell["cooldown"]
                 self.cast_timer = 12
 
+    def spell(self, slot):
+        return STUN_BOLT if slot == "spell1" else SIGNATURE_SPELLS[self.wizard["signature"]]
+
+    def cast(self, spell, projectiles):
+        x, y, power = self.rect.centerx + self.facing * 50, self.rect.y + 45, self.wizard["power"]
+        if spell["kind"] == "volley":            # a fan of small bolts
+            count = spell.get("count", 3)
+            for k in range(count):
+                vy = (k - (count - 1) / 2) * 0.9
+                projectiles.append(Projectile(self, spell, x, y, self.facing, power, vy))
+        elif spell["kind"] == "quake":           # starts at the wizard's feet
+            projectiles.append(Projectile(self, spell, self.rect.centerx + self.facing * 40,
+                                          GROUND_Y, self.facing, power))
+        else:
+            projectiles.append(Projectile(self, spell, x, y, self.facing, power))
+
     def charge(self, slot):
         """0..1, how recharged an attack or spell is (1 = ready)."""
-        full = MELEE_COOLDOWN if slot == "attack" else SPELLS[slot]["cooldown"]
+        full = MELEE_COOLDOWN if slot == "attack" else self.spell(slot)["cooldown"]
         return 1 - self.cooldowns[slot] / full
 
     def pose(self):
@@ -345,6 +383,8 @@ class Fighter:
         draw_wizard(surf, self.wizard["look"], self.pose(), self.rect.x, self.rect.y,
                     facing=self.facing, white=self.hit_flash > 5, tick=self.anim,
                     ground=GROUND_Y - self.rect.y)
+        if self.slow_timer > 0 and self.health > 0:
+            art.draw_snare(surf, self.rect.centerx, self.rect.bottom, self.anim)
 
 
 # ---------------- Game (menus, rounds, drawing) ----------------
@@ -557,21 +597,24 @@ class Game:
 
             # Wizard preview with browse arrows
             cx = box.centerx
-            pygame.draw.ellipse(surf, THEME["floor_shadow"], (cx - 90, 312, 180, 22))
-            draw_wizard(surf, wiz["look"], "cast" if ready else "idle", cx - 50, 122,
-                        facing=1 if i == 0 else -1, scale=1.9, tick=self.tick)
+            pygame.draw.ellipse(surf, THEME["floor_shadow"], (cx - 82, 300, 164, 20))
+            draw_wizard(surf, wiz["look"], "cast" if ready else "idle", cx - 42, 140,
+                        facing=1 if i == 0 else -1, scale=1.65, tick=self.tick)   # tallest hat fits
             if not ready:
                 for side in (-1, 1):
                     ax = cx + side * 160
-                    pts = [(ax + side * 10, 220), (ax - side * 6, 208), (ax - side * 6, 232)]
+                    pts = [(ax + side * 10, 212), (ax - side * 6, 200), (ax - side * 6, 224)]
                     pygame.draw.polygon(surf, THEME["text_muted"], pts)
 
-            art.text(surf, wiz["name"], HEAD_FONT, name_color(wiz), (cx, 352))
-            art.text(surf, look["label"], SMALL_FONT, THEME["text_muted"], (cx, 380), shadow=False)
+            art.text(surf, wiz["name"], HEAD_FONT, name_color(wiz), (cx, 340))
+            art.text(surf, look["label"], SMALL_FONT, THEME["text_muted"], (cx, 374), shadow=False)
+            sig = SIGNATURE_SPELLS[wiz["signature"]]
+            art.text(surf, f"Signature: {sig['name']} ({sig['about']})", SMALL_FONT,
+                     art.mix(THEME[sig["color"]], THEME["text"], 0.25), (cx, 395), shadow=False)
 
             # Stat bars
             for r, (stat, label) in enumerate((("speed", "SPEED"), ("power", "POWER"), ("health", "HEALTH"))):
-                y = 402 + r * 20
+                y = 418 + r * 18
                 value = wiz.get(stat, MAX_HEALTH)
                 art.text(surf, label, KEY_FONT, THEME["text"], (box.x + 70, y), "midleft", False)
                 bar = pygame.Rect(box.x + 150, y - 5, 190, 10)
@@ -583,12 +626,12 @@ class Game:
 
             # How to choose
             if ready:
-                art.text(surf, "READY!", NAME_FONT, THEME["heading"], (cx, 482))
+                art.text(surf, "READY!", NAME_FONT, THEME["heading"], (cx, 486))
             else:
                 c = CONTROLS[i]
                 parts = [([key_label(c["left"]), key_label(c["right"])], "change"),
                          ([key_label(c["attack"])], "confirm")]
-                self.draw_key_hints(surf, parts, cx, 470, centered=True)
+                self.draw_key_hints(surf, parts, cx, 474, centered=True)
 
     def draw_fight(self, surf):
         self.p1.draw(surf)
@@ -740,11 +783,15 @@ class Game:
     def draw_key_bar(self, surf):
         """Always-visible reminder of each player's keys. Keys light up while held;
         Strike/Stun/Fire fill up as they recharge and glow when ready."""
-        glows = {"attack": THEME["gold_bright"], "spell1": THEME["stun"], "spell2": THEME["fire"]}
-        h, gap, y = 24, 9, HEIGHT - 40
+        h, gap, y = 24, 7, HEIGHT - 40
         for p in (0, 1):
+            f = self.p1 if p == 0 else self.p2
+            sig = f.spell("spell2")
+            glows = {"attack": THEME["gold_bright"], "spell1": THEME["stun"], "spell2": THEME[sig["color"]]}
             parts = []
             for names, short, _ in ACTIONS:
+                if names[0] == "spell2":
+                    short = sig["short"]
                 slot = names[0] if names[0] in glows else None
                 parts.append(([key_label(CONTROLS[p][n]) for n in names], short,
                               (slot, names, glows.get(slot))))
