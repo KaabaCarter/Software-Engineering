@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — controls</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F3E6C4;text-decoration:none}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 960px; height: 540px; position: relative; overflow: hidden; background: #19193A; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #2B2420">
+<div style="position: absolute; left: 0; top: 0">
+<dc-import name="Hall" dim="0.6" hint-size="960px,540px"></dc-import>
+</div>
+<div style="position: absolute; left: 90px; top: 34px; width: 780px; box-sizing: border-box; padding: 22px 36px 22px; border-radius: 12px; background: #F3E6C4; border: 3px solid #CDB27A; box-shadow: 0 0 0 6px rgba(21, 20, 44, 0.6), 0 18px 40px rgba(0, 0, 0, 0.6); display: flex; flex-direction: column; gap: 16px">
+<h1 style="margin: 0; text-align: center; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 38px; color: #2B2420">Controls</h1>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px">
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; border-radius: 6px; background: #C8102E; color: #FFFFFF; font-weight: 700; font-size: 16px; letter-spacing: 2px"><span>PLAYER 1</span><span style="font-size: 14px; color: #F5C542">Ember side · left</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span>Move</span><div style="display: flex; gap: 6px"><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">A</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">D</span></div></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span>Jump</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">W</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span>Block (shield)</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">S</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span>Wand strike</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">F</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #1A8FC4"></span>Stun Bolt</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">G</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; font-size: 19px; font-weight: 600"><span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #E0620A"></span>Fire Blast</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">H</span></div>
+</div>
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; border-radius: 6px; background: #1F7A45; color: #FFFFFF; font-weight: 700; font-size: 16px; letter-spacing: 2px"><span>PLAYER 2</span><span style="font-size: 14px; color: #E6EBEF">Sage side · right</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span>Move</span><div style="display: flex; gap: 6px"><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">←</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">→</span></div></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span>Jump</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">↑</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span>Block (shield)</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">↓</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span>Wand strike</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 17px; font-weight: 700">,</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; border-bottom: 1px solid #D9C79C; font-size: 19px; font-weight: 600"><span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #1A8FC4"></span>Stun Bolt</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 17px; font-weight: 700">.</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 38px; font-size: 19px; font-weight: 600"><span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #E0620A"></span>Fire Blast</span><span style="min-width: 30px; height: 30px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 15px; font-weight: 700">/</span></div>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding-top: 10px; border-top: 2px solid #CDB27A; font-size: 17px; font-weight: 600"><span style="min-width: 30px; height: 30px; padding: 0 8px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 14px; font-weight: 700">Esc</span><span>pauses the duel at any time</span></div>
+</div>
+<a href="Main.dc.html" style="position: absolute; left: 380px; top: 478px; width: 200px; height: 44px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 8px; background: rgba(21, 20, 44, 0.9); border: 2px solid #5C5668; font-size: 17px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase"><span style="min-width: 28px; height: 26px; padding: 0 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border: 1px solid #5A4E44; border-bottom-width: 3px; font-size: 13px; text-transform: none; letter-spacing: 0">Esc</span>Back to menu</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":540}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

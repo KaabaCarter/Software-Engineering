@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — character sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; padding: 56px; background: #15142C; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4; display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 40px">
+
+<div style="display: flex; flex-direction: column; gap: 18px">
+<span style="font-size: 15px; font-weight: 700; letter-spacing: 4px; color: #F2C879">CHARACTER SHEET</span>
+<h1 style="margin: 0; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 64px; line-height: 1; color: {{d.nameCol}}">{{d.title}}</h1>
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 14px; height: 14px; border-radius: 3px; background: {{d.accent}}"></span><span style="font-size: 18px; font-weight: 700; letter-spacing: 1px">{{d.houseLabel}} · {{d.tagline}}</span></div>
+<p style="margin: 0; font-size: 18px; line-height: 1.45; color: #E6DCF0">{{d.desc}}</p>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 10px; background: #1E1D3A; border: 1px solid #36334F">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 64px; font-size: 14px; font-weight: 700; letter-spacing: 1.5px">SPEED</span><div style="flex-grow: 1; height: 10px; border-radius: 5px; background: #2A2740; overflow: hidden"><div style="width: {{d.speedPct}}%; height: 100%; background: {{d.bar}}"></div></div><span style="width: 48px; text-align: right; font-size: 18px; font-weight: 700">{{d.speed}}</span></div>
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 64px; font-size: 14px; font-weight: 700; letter-spacing: 1.5px">POWER</span><div style="flex-grow: 1; height: 10px; border-radius: 5px; background: #2A2740; overflow: hidden"><div style="width: {{d.powerPct}}%; height: 100%; background: {{d.bar}}"></div></div><span style="width: 48px; text-align: right; font-size: 18px; font-weight: 700">{{d.power}}</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #BDB4CF">SPRITE PALETTE</span>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{d.swatches}}" as="s" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="height: 40px; border-radius: 6px; background: {{s.hex}}; border: 1px solid rgba(255, 255, 255, 0.15)"></div><span style="font-size: 12px; font-weight: 600">{{s.label}}</span><span style="font-size: 12px; color: #D8CFE6">{{s.hex}}</span></div>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #BDB4CF">ACTUAL SIZE · 1× · HITBOX DASHED</span>
+<div style="position: relative; height: 190px; border-radius: 10px; overflow: hidden; background: #19193A; border: 1px solid #36334F">
+<div style="position: absolute; left: 0; right: 0; top: 160px; bottom: 0; background: #4A4552; border-top: 3px solid #7A7388"></div>
+<div style="position: absolute; left: 20px; top: 10px"><dc-import name="Wizard" house="{{d.house}}" pose="idle" facing="right" scale="1" hitbox="true" hint-size="140px,165px"></dc-import></div>
+<div style="position: absolute; left: 190px; top: 10px"><dc-import name="Wizard" house="{{d.house}}" pose="idle" facing="left" scale="1" hitbox="true" hint-size="140px,165px"></dc-import></div>
+</div>
+<span style="font-size: 14px; color: #D8CFE6">Hitbox stays 50 × 100. Hat, wand and robe flare may spill past it. Draw facing right; flip for left.</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 26px; color: #F5C542">Poses &amp; states <span style="font-family: 'Barlow Semi Condensed', sans-serif; font-weight: 600; font-size: 16px; color: #D8CFE6">shown at 1.5× · frame counts are a starting suggestion</span></h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{states}}" as="s" hint-placeholder-count="8">
+<div style="height: 330px; box-sizing: border-box; padding: 12px; border-radius: 10px; background: #1E1D3A; border: 1px solid #36334F; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 16px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase">{{s.label}}</span><span style="font-size: 13px; color: #D8CFE6">{{s.note}}</span></div>
+<div style="position: relative; flex-grow: 1; border-radius: 8px; overflow: hidden; background: #19193A">
+<div style="position: absolute; left: 0; right: 0; top: 240px; bottom: 0; background: #4A4552; border-top: 2px solid #7A7388"></div>
+<div style="position: absolute; left: 0; top: 15px"><dc-import name="Wizard" house="{{s.house}}" pose="{{s.pose}}" facing="right" scale="1.5" hint-size="210px,248px"></dc-import></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"house":{"editor":"enum","options":["ember","sage"],"default":"ember"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const DATA = {
+      ember: {
+        title: 'Ember', house: 'ember', houseLabel: 'Scarlet & gold', tagline: 'Bold · fiery · agile',
+        desc: 'The quickest wizard in the hall. Ember leans into every move: a hat tip that curls back like a flame, spiky auburn hair and a short, swinging robe that reads as speed even when standing still.',
+        speed: '6', power: '×1.0', speedPct: 75, powerPct: 67, nameCol: '#FF4D5E', accent: '#C8102E', bar: '#F5C542',
+        swatches: [{ label: 'Robe', hex: '#C8102E' }, { label: 'Shade', hex: '#7A0A1C' }, { label: 'Trim', hex: '#F5C542' }, { label: 'Skin', hex: '#F2C29E' }, { label: 'Hair', hex: '#C2531F' }]
+      },
+      sage: {
+        title: 'Sage', house: 'sage', houseLabel: 'Emerald & silver', tagline: 'Calm · cunning · powerful',
+        desc: 'Slower on foot, heavier with every spell. Sage stands upright under a tall, straight hat with a silver goatee and scarf, so the silhouette stays distinct from Ember even in grayscale.',
+        speed: '5', power: '×1.25', speedPct: 62.5, powerPct: 83, nameCol: '#3FD27E', accent: '#2E9E5B', bar: '#D9DEE3',
+        swatches: [{ label: 'Robe', hex: '#2E9E5B' }, { label: 'Shade', hex: '#1A472A' }, { label: 'Trim', hex: '#D9DEE3' }, { label: 'Skin', hex: '#C9966F' }, { label: 'Hair', hex: '#3A2A22' }]
+      }
+    };
+    const d = DATA[this.props.house] || DATA.ember;
+    const S = [
+      ['Idle', '4 frames · loop', 'idle'], ['Walk', '6 frames · loop', 'walk'], ['Jump', '3 frames', 'jump'], ['Block', 'shield r 62', 'block'],
+      ['Wand strike', '4 frames', 'melee'], ['Casting', '5 frames', 'cast'], ['Hit', '2–3 white frames', 'hit'], ['Knocked out', '6 frames · hold', 'ko']
+    ];
+    return { d, states: S.map(([label, note, pose]) => ({ label, note, pose, house: d.house })) };
+  }
+}
+</script>
+</body>
+</html>

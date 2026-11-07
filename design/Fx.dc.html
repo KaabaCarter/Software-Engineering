@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Spell effect</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: {{w}}px; height: {{h}}px">
+<svg width="{{w}}" height="{{h}}" viewBox="-60 -40 120 80" style="display: block; overflow: visible">
+<g transform="{{flip}}">
+<g display="{{stun0}}">
+<circle r="13" fill="{{col}}" fill-opacity="0.3"/>
+<circle r="6" fill="{{col}}"/>
+<circle r="3.5" fill="#FFFFFF"/>
+<path d="M0 -15 L2 -2 L15 0 L2 2 L0 15 L-2 2 L-15 0 L-2 -2 Z" fill="#FFFFFF" fill-opacity="0.85"/>
+</g>
+<g display="{{stun1}}">
+<polygon points="20,-9 -56,0 20,9" fill="{{col}}" fill-opacity="0.35"/>
+<polygon points="20,-4.5 -34,0 20,4.5" fill="#FFFFFF" fill-opacity="0.75"/>
+<circle cx="20" r="17" fill="{{col}}" fill-opacity="0.22"/>
+<circle cx="20" r="8" fill="{{col}}"/>
+<circle cx="21" r="4.5" fill="#FFFFFF"/>
+<path transform="translate(-14 -11)" d="M0 -4 L1 -1 L4 0 L1 1 L0 4 L-1 1 L-4 0 L-1 -1 Z" fill="#FFFFFF"/>
+<path transform="translate(-32 9)" d="M0 -3.5 L1 -1 L3.5 0 L1 1 L0 3.5 L-1 1 L-3.5 0 L-1 -1 Z" fill="{{col}}"/>
+</g>
+<g display="{{stun2}}">
+<circle r="19" fill="none" stroke="{{col}}" stroke-width="3" stroke-opacity="0.75"/>
+<path d="M0 -28 V-15 M0 15 V28 M-28 0 H-15 M15 0 H28 M-19 -19 L-11 -11 M11 11 L19 19 M19 -19 L11 -11 M-11 11 L-19 19" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none"/>
+<circle r="7" fill="{{col}}"/>
+<circle r="4" fill="#FFFFFF"/>
+</g>
+<g display="{{fire0}}">
+<circle r="18" fill="#FF7A1A" fill-opacity="0.25"/>
+<circle r="14" fill="none" stroke="#FFB347" stroke-width="2" stroke-dasharray="5 4"/>
+<circle r="9" fill="#FF8A1F"/>
+<circle r="5" fill="#FFE08A"/>
+<circle cx="-22" cy="-8" r="2" fill="#FFB347"/><circle cx="20" cy="12" r="2" fill="#FF6A00"/><circle cx="16" cy="-16" r="1.6" fill="#FFD27A"/>
+</g>
+<g display="{{fire1}}">
+<circle cx="20" r="27" fill="#FF7A1A" fill-opacity="0.22"/>
+<path d="M22 -15 Q-6 -16 -34 -3 Q-14 2 -40 9 Q-4 17 22 15 Z" fill="#FF5A1F" fill-opacity="0.75"/>
+<path d="M22 -9 Q2 -9 -16 0 Q2 9 22 9 Z" fill="#FFB02E"/>
+<circle cx="20" r="14" fill="#FF7A1A"/>
+<circle cx="22" r="10" fill="#FFC23D"/>
+<circle cx="24" r="5" fill="#FFF3C4"/>
+<circle cx="-22" cy="-11" r="3" fill="#FFB347"/><circle cx="-36" cy="13" r="2.4" fill="#FF6A00"/><circle cx="-46" cy="-4" r="2" fill="#FFB347"/><circle cx="-56" cy="6" r="1.4" fill="#FFD27A"/><circle cx="-12" cy="16" r="2" fill="#FFD27A"/>
+</g>
+<g display="{{fire2}}">
+<circle cx="-24" cy="-20" r="8" fill="#6E6879" fill-opacity="0.5"/><circle cx="24" cy="-22" r="6" fill="#6E6879" fill-opacity="0.45"/><circle cx="28" cy="18" r="7" fill="#6E6879" fill-opacity="0.4"/>
+<polygon points="0,-32 7,-13 27,-19 14,-3 31,6 11,10 12,29 0,16 -12,29 -11,10 -31,6 -14,-3 -27,-19 -7,-13" fill="#FF6A00"/>
+<polygon points="0,-19 4,-7 15,-11 8,-1 18,4 6,6 7,17 0,9 -7,17 -6,6 -18,4 -8,-1 -15,-11 -4,-7" fill="#FFC23D"/>
+<circle r="6" fill="#FFF3C4"/>
+<circle cx="-36" cy="4" r="2" fill="#FFB347"/><circle cx="36" cy="-6" r="2" fill="#FFB347"/><circle cx="-6" cy="34" r="1.6" fill="#FFD27A"/>
+</g>
+<g display="{{melee0}}">
+<circle cx="4" r="22" fill="{{col}}" fill-opacity="0.18"/>
+<path d="M-8 -28 Q32 0 -8 28 Q14 0 -8 -28 Z" fill="#FFFFFF" fill-opacity="0.92"/>
+<path d="M-8 -28 Q32 0 -8 28" fill="none" stroke="{{col}}" stroke-width="2"/>
+</g>
+<g display="{{melee1}}">
+<circle r="20" fill="{{col}}" fill-opacity="0.3"/>
+<path d="M0 -24 L5 -5 L24 0 L5 5 L0 24 L-5 5 L-24 0 L-5 -5 Z" fill="#FFFFFF"/>
+<path d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" fill="{{col}}"/>
+</g>
+<g display="{{spark}}">
+<path d="M0 -26 V-12 M0 12 V22 M-24 0 H-11 M11 0 H28 M-17 -17 L-9 -9 M9 9 L17 17 M18 -18 L9 -9 M-9 9 L-16 16" stroke="#FFE680" stroke-width="3" stroke-linecap="round" fill="none"/>
+<path d="M0 -9 L3 0 L0 9 L-3 0 Z" fill="#FFFFFF"/>
+<path d="M-9 0 L0 3 L9 0 L0 -3 Z" fill="#FFFFFF"/>
+<circle cx="22" cy="-12" r="2" fill="#FFFFFF"/><circle cx="-20" cy="12" r="1.6" fill="#FFE680"/>
+</g>
+<g display="{{ko}}">
+<ellipse rx="26" ry="8" fill="none" stroke="#F5C542" stroke-opacity="0.6" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path transform="translate(-20 -2)" d="M0 -7 L2.1 -2.2 L7 -2.2 L3.1 1.1 L4.3 5.9 L0 3.1 L-4.3 5.9 L-3.1 1.1 L-7 -2.2 L-2.1 -2.2 Z" fill="#F5C542"/>
+<path transform="translate(3 7)" d="M0 -7 L2.1 -2.2 L7 -2.2 L3.1 1.1 L4.3 5.9 L0 3.1 L-4.3 5.9 L-3.1 1.1 L-7 -2.2 L-2.1 -2.2 Z" fill="#FFFFFF"/>
+<path transform="translate(21 -5)" d="M0 -7 L2.1 -2.2 L7 -2.2 L3.1 1.1 L4.3 5.9 L0 3.1 L-4.3 5.9 L-3.1 1.1 L-7 -2.2 L-2.1 -2.2 Z" fill="#F5C542"/>
+<text x="0" y="-16" text-anchor="middle" font-family="Cinzel Decorative, Georgia, serif" font-weight="900" font-size="15" fill="#FFFFFF" stroke="#C8102E" stroke-width="0.8">KO</text>
+</g>
+<g display="{{candle}}">
+<circle cy="-8" r="26" fill="#F2C879" fill-opacity="0.16"/>
+<circle cy="-12" r="11" fill="#F2C879" fill-opacity="0.3"/>
+<rect x="-4" y="-4" width="8" height="28" rx="2" fill="#F3E6C4"/>
+<path d="M-4 0 Q-6 6 -3 8 Q-1 5 -1 0 Z" fill="#E4D2A6"/>
+<path d="M0 -20 Q6 -10 0 -4 Q-6 -10 0 -20 Z" fill="#FFC94D"/>
+<path d="M0 -13 Q3 -8 0 -5 Q-3 -8 0 -13 Z" fill="#FFF6D5"/>
+</g>
+<g display="{{dust}}" fill="#F2C879">
+<circle cx="-30" cy="-14" r="2" fill-opacity="0.7"/><circle cx="-8" cy="10" r="1.4" fill-opacity="0.5"/><circle cx="12" cy="-20" r="1.8" fill-opacity="0.6"/><circle cx="28" cy="14" r="2.2" fill-opacity="0.45"/><circle cx="-40" cy="20" r="1.2" fill-opacity="0.55"/><circle cx="40" cy="-8" r="1.4" fill-opacity="0.6"/><circle cx="2" cy="26" r="1" fill-opacity="0.5"/>
+</g>
+</g>
+</svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"kind":{"editor":"enum","options":["stun","fire","melee","spark","ko","candle","dust"],"default":"stun"},"frame":{"editor":"int","default":1,"min":0,"max":2},"color":{"editor":"color","default":"#5FD0FF","options":["#5FD0FF","#FF4D6A","#3FE08A","#FFD23F"]},"dir":{"editor":"enum","options":["right","left"],"default":"right"},"scale":{"editor":"float","default":2,"min":0.5,"max":4,"step":0.1},"$preview":{"width":240,"height":160}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const kind = this.props.kind || 'stun';
+    const f = Number(this.props.frame);
+    const frame = Number.isFinite(f) ? f : 1;
+    const sc = Number(this.props.scale);
+    const scale = Number.isFinite(sc) && sc > 0 ? sc : 2;
+    const on = (k, fr) => (kind === k && (fr === undefined || frame === fr) ? 'inline' : 'none');
+    return {
+      w: Math.round(120 * scale), h: Math.round(80 * scale),
+      col: this.props.color || '#5FD0FF',
+      flip: this.props.dir === 'left' ? 'matrix(-1 0 0 1 0 0)' : 'matrix(1 0 0 1 0 0)',
+      stun0: on('stun', 0), stun1: on('stun', 1), stun2: on('stun', 2),
+      fire0: on('fire', 0), fire1: on('fire', 1), fire2: on('fire', 2),
+      melee0: on('melee', 0), melee1: kind === 'melee' && frame >= 1 ? 'inline' : 'none',
+      spark: on('spark'), ko: on('ko'), candle: on('candle'), dust: on('dust')
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — paused</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F3E6C4;text-decoration:none}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 960px; height: 540px; position: relative; overflow: hidden; background: #19193A; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4">
+<div style="position: absolute; left: 0; top: 0">
+<dc-import name="Arena" hint-size="960px,540px"></dc-import>
+</div>
+<div style="position: absolute; inset: 0; background: rgba(11, 11, 30, 0.68)"></div>
+<div style="position: absolute; left: 300px; top: 150px; width: 360px; box-sizing: border-box; padding: 26px 30px 28px; border-radius: 14px; background: #15142C; border: 2px solid #F5C542; box-shadow: 0 0 0 6px rgba(245, 197, 66, 0.12), 0 0 40px rgba(245, 197, 66, 0.25); display: flex; flex-direction: column; align-items: center; gap: 18px">
+<h1 style="margin: 0; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 48px; line-height: 1; letter-spacing: 3px; color: #F5C542; text-shadow: 0 0 18px rgba(245, 197, 66, 0.5)">Paused</h1>
+<div style="width: 100%; display: flex; flex-direction: column; gap: 10px">
+<a href="Arena.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; gap: 12px; border-radius: 8px; background: #F3E6C4; color: #2B2420; border: 2px solid #F5C542; font-size: 20px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase"><span style="min-width: 44px; height: 28px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border-bottom: 3px solid #0F0C0A; font-size: 14px; text-transform: none; letter-spacing: 0">Esc</span>Resume</a>
+<a href="Main.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; gap: 12px; border-radius: 8px; background: rgba(42, 39, 64, 0.9); border: 2px solid #5C5668; font-size: 20px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase"><span style="min-width: 44px; height: 28px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border: 1px solid #5A4E44; border-bottom-width: 3px; font-size: 14px">Q</span>Quit to menu</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":540}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — spells and effects</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 64px; background: #15142C; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4; display: flex; flex-direction: column; gap: 32px">
+<header style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 15px; font-weight: 700; letter-spacing: 4px; color: #F2C879">CONCEPT FRAMES</span>
+<h1 style="margin: 0; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 48px; line-height: 1; color: #F5C542">Spells &amp; effects</h1>
+<p style="margin: 0; font-size: 18px; color: #E6DCF0">Frames shown at 2×; the last cell is true game size. Every effect is circles, polygons and lines, so it can be drawn with pygame.draw or baked into small sprites.</p>
+</header>
+
+<div style="display: grid; grid-template-columns: 280px repeat(3, 240px) 200px; gap: 24px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 28px; color: #5FD0FF">Stun Bolt</h2>
+<span style="font-size: 17px; font-weight: 600">Radius 8 · 8 damage · short cooldown</span>
+<span style="font-size: 16px; line-height: 1.4; color: #D8CFE6">A quick jet of electric-blue light with a white-hot core and a tapering streak. Small, bright, gone in a blink.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="border-radius: 10px; background: #19193A; border: 1px solid #36334F"><dc-import name="Fx" kind="stun" frame="0" color="#5FD0FF" scale="2" hint-size="240px,160px"></dc-import></div><span style="font-size: 15px; font-weight: 700">1 · Spawn at wand tip</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="border-radius: 10px; background: #19193A; border: 1px solid #36334F"><dc-import name="Fx" kind="stun" frame="1" color="#5FD0FF" scale="2" hint-size="240px,160px"></dc-import></div><span style="font-size: 15px; font-weight: 700">2 · Flight (loop)</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="border-radius: 10px; background: #19193A; border: 1px solid #36334F"><dc-import name="Fx" kind="stun" frame="2" color="#5FD0FF" scale="2" hint-size="240px,160px"></dc-import></div><span style="font-size: 15px; font-weight: 700">3 · Impact burst</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 160px; border-radius: 10px; background: #19193A; border: 1px solid #36334F; display: flex; flex-direction: column; align-items: center; justify-content: center"><dc-import name="Fx" kind="stun" frame="1" color="#5FD0FF" scale="1" hint-size="120px,80px"></dc-import></div><span style="font-size: 15px; font-weight: 700">Actual size</span></div>
+</div>
+
+<div style="display: grid; grid-template-columns: 280px repeat(3, 240px) 200px; gap: 24px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 28px; color: #FF8A1F">Fire Blast</h2>
+<span style="font-size: 17px; font-weight: 600">Radius 14 · 15 damage · long cooldown</span>
+<span style="font-size: 16px; line-height: 1.4; color: #D8CFE6">A slow, heavy fireball: layered orange, gold and cream with a flame tail and embers dropping behind it.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="border-radius: 10px; background: #19193A; border: 1px solid #36334F"><dc-import name="Fx" kind="fire" frame="0" scale="2" hint-size="240px,160px"></dc-import></div><span style="font-size: 15px; font-weight: 700">1 · Charge</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="border-radius: 10px; background: #19193A; border: 1px solid #36334F"><dc-import name="Fx" kind="fire" frame="1" scale="2" hint-size="240px,160px"></dc-import></div><span style="font-size: 15px; font-weight: 700">2 · Flight + embers</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="border-radius: 10px; background: #19193A; border: 1px solid #36334F"><dc-import name="Fx" kind="fire" frame="2" scale="2" hint-size="240px,160px"></dc-import></div><span style="font-size: 15px; font-weight: 700">3 · Explosion + smoke</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 160px; border-radius: 10px; background: #19193A; border: 1px solid #36334F; display: flex; flex-direction: column; align-items: center; justify-content: center"><dc-import name="Fx" kind="fire" frame="1" scale="1" hint-size="120px,80px"></dc-import></div><span style="font-size: 15px; font-weight: 700">Actual size</span></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
+<div style="padding: 18px; border-radius: 12px; background: #1E1D3A; border: 1px solid #36334F; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 22px; color: #9FD3FF">Block</h3>
+<span style="font-size: 15px; color: #D8CFE6">Pale-blue bubble, r 62, 20% fill, bright rim and a glint.</span>
+<div style="position: relative; height: 200px; border-radius: 8px; overflow: hidden; background: #19193A">
+<div style="position: absolute; left: 0; right: 0; top: 182px; bottom: 0; background: #4A4552"></div>
+<div style="position: absolute; left: 60px; top: 17px"><dc-import name="Wizard" house="sage" pose="block" facing="right" scale="1.1" hint-size="154px,182px"></dc-import></div>
+</div>
+</div>
+<div style="padding: 18px; border-radius: 12px; background: #1E1D3A; border: 1px solid #36334F; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 22px; color: #F5C542">Wand strike</h3>
+<span style="font-size: 15px; color: #D8CFE6">White crescent swipe, then a star flash in front of the wand.</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="height: 200px; border-radius: 8px; background: #19193A; display: flex; align-items: center; justify-content: center"><dc-import name="Fx" kind="melee" frame="0" color="#F5C542" scale="1.2" hint-size="144px,96px"></dc-import></div>
+<div style="height: 200px; border-radius: 8px; background: #19193A; display: flex; align-items: center; justify-content: center"><dc-import name="Fx" kind="melee" frame="1" color="#F5C542" scale="1.2" hint-size="144px,96px"></dc-import></div>
+</div>
+</div>
+<div style="padding: 18px; border-radius: 12px; background: #1E1D3A; border: 1px solid #36334F; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 22px; color: #FFE680">Hit sparks &amp; KO</h3>
+<span style="font-size: 15px; color: #D8CFE6">Sparks on every hit; circling stars over a knocked-out wizard.</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="height: 200px; border-radius: 8px; background: #19193A; display: flex; align-items: center; justify-content: center"><dc-import name="Fx" kind="spark" scale="1.2" hint-size="144px,96px"></dc-import></div>
+<div style="height: 200px; border-radius: 8px; background: #19193A; display: flex; align-items: center; justify-content: center"><dc-import name="Fx" kind="ko" scale="1.2" hint-size="144px,96px"></dc-import></div>
+</div>
+</div>
+<div style="padding: 18px; border-radius: 12px; background: #1E1D3A; border: 1px solid #36334F; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 22px; color: #F2C879">Ambient</h3>
+<span style="font-size: 15px; color: #D8CFE6">Floating candles bob slowly; dust motes drift up through the light.</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="height: 200px; border-radius: 8px; background: #19193A; display: flex; align-items: center; justify-content: center"><dc-import name="Fx" kind="candle" scale="1.2" hint-size="144px,96px"></dc-import></div>
+<div style="height: 200px; border-radius: 8px; background: #19193A; display: flex; align-items: center; justify-content: center"><dc-import name="Fx" kind="dust" scale="1.2" hint-size="144px,96px"></dc-import></div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

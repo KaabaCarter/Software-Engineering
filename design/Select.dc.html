@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — character select</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#2B2420;text-decoration:none}a:hover{color:#000000}
+</style>
+</helmet>
+<div style="width: 960px; height: 540px; position: relative; overflow: hidden; background: #19193A; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4">
+<div style="position: absolute; left: 0; top: 0">
+<dc-import name="Hall" dim="0.55" hint-size="960px,540px"></dc-import>
+</div>
+<h1 style="position: absolute; left: 0; top: 22px; width: 960px; margin: 0; text-align: center; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 34px; color: #F5C542; text-shadow: 0 2px 0 #7A0A1C, 0 0 18px rgba(245, 197, 66, 0.45)">Choose your wizard</h1>
+
+<section aria-label="Player 1" style="position: absolute; left: 64px; top: 82px; width: 400px; height: 400px; box-sizing: border-box; padding: 14px 18px; border-radius: 14px; background: rgba(18, 16, 40, 0.9); border: 3px solid {{p1Border}}; box-shadow: {{p1Glow}}; display: flex; flex-direction: column; align-items: center; gap: 4px">
+<div style="width: 100%; display: flex; align-items: center; justify-content: space-between">
+<span style="padding: 3px 8px; border-radius: 4px; background: #C8102E; color: #FFFFFF; font-size: 14px; font-weight: 700; letter-spacing: 2px">PLAYER 1</span>
+<span style="font-size: 14px; color: #D8CFE6">A / D to choose</span>
+</div>
+<div style="width: 100%; height: 178px; display: flex; align-items: center; justify-content: space-between">
+<button aria-label="Previous wizard" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #5C5668; background: #15142C; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2 L4 8 L10 14" stroke="#F3E6C4" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div style="width: 196px; height: 178px; position: relative; overflow: visible">
+<div style="position: absolute; left: 38px; bottom: 0; width: 120px; height: 16px; border-radius: 50%; background: #3A3646; box-shadow: 0 0 22px rgba(200, 16, 46, 0.55)"></div>
+<div style="position: absolute; left: 0; top: -38px">
+<dc-import name="Wizard" house="ember" pose="{{p1Pose}}" facing="right" scale="1.4" hint-size="196px,231px"></dc-import>
+</div>
+</div>
+<button aria-label="Next wizard" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #5C5668; background: #15142C; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2 L12 8 L6 14" stroke="#F3E6C4" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+</div>
+<h2 style="margin: 0; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 30px; line-height: 1.1; color: #FF4D5E">Ember</h2>
+<span style="font-size: 15px; letter-spacing: 1px; color: #F5C542">Bold · fiery · agile</span>
+<div style="width: 100%; display: flex; flex-direction: column; gap: 6px; margin-top: 4px">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 64px; font-size: 14px; font-weight: 700; letter-spacing: 1.5px">SPEED</span><div style="flex-grow: 1; height: 10px; border-radius: 5px; background: #2A2740; overflow: hidden"><div style="width: 75%; height: 100%; background: #F5C542"></div></div><span style="width: 44px; text-align: right; font-size: 16px; font-weight: 700">6</span></div>
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 64px; font-size: 14px; font-weight: 700; letter-spacing: 1.5px">POWER</span><div style="flex-grow: 1; height: 10px; border-radius: 5px; background: #2A2740; overflow: hidden"><div style="width: 67%; height: 100%; background: #F5C542"></div></div><span style="width: 44px; text-align: right; font-size: 16px; font-weight: 700">×1.0</span></div>
+</div>
+<sc-if value="{{p1Ready}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 8px; width: 100%; height: 44px; border-radius: 8px; background: #F5C542; color: #2B2420; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 24px; letter-spacing: 2px; box-shadow: 0 0 18px rgba(245, 197, 66, 0.7)">Ready!</div>
+</sc-if>
+<sc-if value="{{p1Waiting}}" hint-placeholder-val="{{ true }}">
+<button onClick="{{lockP1}}" style="margin-top: 8px; width: 100%; height: 44px; border-radius: 8px; border: 2px dashed #F5C542; background: transparent; color: #F3E6C4; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; font-size: 17px; font-weight: 700; letter-spacing: 1px; cursor: pointer">Press <span style="min-width: 26px; height: 26px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; border: 1px solid #5A4E44; border-bottom-width: 3px; font-size: 14px">F</span> to lock in</button>
+</sc-if>
+</section>
+
+<section aria-label="Player 2" style="position: absolute; left: 496px; top: 82px; width: 400px; height: 400px; box-sizing: border-box; padding: 14px 18px; border-radius: 14px; background: rgba(18, 16, 40, 0.9); border: 3px solid #F5C542; box-shadow: 0 0 0 3px rgba(46, 158, 91, 0.6), 0 0 30px rgba(245, 197, 66, 0.45); display: flex; flex-direction: column; align-items: center; gap: 4px">
+<div style="width: 100%; display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 14px; color: #D8CFE6">← / → to choose</span>
+<span style="padding: 3px 8px; border-radius: 4px; background: #1F7A45; color: #FFFFFF; font-size: 14px; font-weight: 700; letter-spacing: 2px">PLAYER 2</span>
+</div>
+<div style="width: 100%; height: 178px; display: flex; align-items: center; justify-content: space-between">
+<button aria-label="Previous wizard" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #5C5668; background: #15142C; display: flex; align-items: center; justify-content: center; padding: 0; opacity: 0.45"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2 L4 8 L10 14" stroke="#F3E6C4" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div style="width: 196px; height: 178px; position: relative; overflow: visible">
+<div style="position: absolute; left: 38px; bottom: 0; width: 120px; height: 16px; border-radius: 50%; background: #3A3646; box-shadow: 0 0 22px rgba(46, 158, 91, 0.6)"></div>
+<div style="position: absolute; left: 0; top: -38px">
+<dc-import name="Wizard" house="sage" pose="cast" facing="left" scale="1.4" hint-size="196px,231px"></dc-import>
+</div>
+</div>
+<button aria-label="Next wizard" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #5C5668; background: #15142C; display: flex; align-items: center; justify-content: center; padding: 0; opacity: 0.45"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2 L12 8 L6 14" stroke="#F3E6C4" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+</div>
+<h2 style="margin: 0; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 30px; line-height: 1.1; color: #3FD27E">Sage</h2>
+<span style="font-size: 15px; letter-spacing: 1px; color: #D9DEE3">Calm · cunning · powerful</span>
+<div style="width: 100%; display: flex; flex-direction: column; gap: 6px; margin-top: 4px">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 64px; font-size: 14px; font-weight: 700; letter-spacing: 1.5px">SPEED</span><div style="flex-grow: 1; height: 10px; border-radius: 5px; background: #2A2740; overflow: hidden"><div style="width: 62.5%; height: 100%; background: #D9DEE3"></div></div><span style="width: 44px; text-align: right; font-size: 16px; font-weight: 700">5</span></div>
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 64px; font-size: 14px; font-weight: 700; letter-spacing: 1.5px">POWER</span><div style="flex-grow: 1; height: 10px; border-radius: 5px; background: #2A2740; overflow: hidden"><div style="width: 83%; height: 100%; background: #D9DEE3"></div></div><span style="width: 44px; text-align: right; font-size: 16px; font-weight: 700">×1.25</span></div>
+</div>
+<div style="margin-top: 8px; width: 100%; height: 44px; border-radius: 8px; background: #F5C542; color: #2B2420; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 24px; letter-spacing: 2px; box-shadow: 0 0 18px rgba(245, 197, 66, 0.7)">Ready!</div>
+</section>
+
+<sc-if value="{{p1Waiting}}" hint-placeholder-val="{{ true }}">
+<p style="position: absolute; left: 0; top: 498px; width: 960px; margin: 0; text-align: center; font-size: 17px; font-weight: 600; letter-spacing: 1px; color: #F3E6C4">Waiting for Player 1…</p>
+</sc-if>
+<sc-if value="{{p1Ready}}" hint-placeholder-val="{{ false }}">
+<a href="Arena.dc.html" style="position: absolute; left: 370px; top: 492px; width: 220px; height: 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 8px; background: #F3E6C4; border: 2px solid #F5C542; box-shadow: 0 0 20px rgba(245, 197, 66, 0.5); font-size: 18px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase"><span style="height: 26px; padding: 0 8px; box-sizing: border-box; display: flex; align-items: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; font-size: 13px; text-transform: none; letter-spacing: 0">Enter</span>Start duel</a>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":540}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { ready: false };
+  }
+  renderVals() {
+    const ready = !!this.state.ready;
+    return {
+      p1Ready: ready, p1Waiting: !ready,
+      p1Pose: ready ? 'cast' : 'idle',
+      p1Border: ready ? '#F5C542' : '#C8102E',
+      p1Glow: ready ? '0 0 0 3px rgba(200,16,46,0.6), 0 0 30px rgba(245,197,66,0.45)' : '0 0 26px rgba(200,16,46,0.45)',
+      lockP1: () => this.setState({ ready: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

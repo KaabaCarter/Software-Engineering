@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wizard Duel — title screen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@600;700;900&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F3E6C4;text-decoration:none}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 960px; height: 540px; position: relative; overflow: hidden; background: #19193A; font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif; color: #F3E6C4">
+<div style="position: absolute; left: 0; top: 0">
+<dc-import name="Hall" dim="0.3" hint-size="960px,540px"></dc-import>
+</div>
+<div style="position: absolute; left: 60px; top: 160px">
+<dc-import name="Wizard" house="ember" pose="cast" facing="right" scale="2" hint-size="280px,330px"></dc-import>
+</div>
+<div style="position: absolute; left: 620px; top: 160px">
+<dc-import name="Wizard" house="sage" pose="cast" facing="left" scale="2" hint-size="280px,330px"></dc-import>
+</div>
+<div style="position: absolute; left: 0; top: 48px; width: 960px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+<h1 style="margin: 0; font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; font-weight: 900; font-size: 76px; line-height: 1; letter-spacing: 2px; color: #F5C542; text-shadow: 0 3px 0 #7A0A1C, 0 0 22px rgba(245, 197, 66, 0.55), 0 8px 18px rgba(0, 0, 0, 0.7)">Wizard Duel</h1>
+<svg width="300" height="20" viewBox="0 0 300 20" aria-hidden="true" style="display: block">
+<path d="M10 10 H128 M172 10 H290" stroke="#F2C879" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M150 0 L153.5 6.5 L160 10 L153.5 13.5 L150 20 L146.5 13.5 L140 10 L146.5 6.5 Z" fill="#F5C542"/>
+<circle cx="134" cy="10" r="2" fill="#F2C879"/><circle cx="166" cy="10" r="2" fill="#F2C879"/>
+</svg>
+<p style="margin: 0; font-size: 16px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: #F3E6C4; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8)">Two wizards · one keyboard · best of three</p>
+</div>
+<nav aria-label="Main menu" style="position: absolute; left: 350px; top: 262px; width: 260px; display: flex; flex-direction: column; gap: 12px">
+<a href="Select.dc.html" style="height: 52px; box-sizing: border-box; padding: 0 12px 0 18px; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; background: #F3E6C4; border: 2px solid #F5C542; box-shadow: 0 0 0 4px rgba(245, 197, 66, 0.25), 0 0 24px rgba(245, 197, 66, 0.45); color: #2B2420; font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase">
+<span style="display: flex; align-items: center; gap: 10px"><svg width="14" height="14" viewBox="-7 -7 14 14" aria-hidden="true"><path d="M0 -7 L2 -2 L7 0 L2 2 L0 7 L-2 2 L-7 0 L-2 -2 Z" fill="#C8102E"/></svg>Play</span>
+<span style="min-width: 54px; height: 28px; padding: 0 8px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border: 1px solid #5A4E44; border-bottom-width: 3px; font-size: 14px; letter-spacing: 0.5px; text-transform: none">Enter</span>
+</a>
+<a href="Controls.dc.html" style="height: 52px; box-sizing: border-box; padding: 0 12px 0 42px; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; background: rgba(21, 20, 44, 0.85); border: 2px solid #5C5668; font-size: 22px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase">
+<span>Controls</span>
+<span style="min-width: 28px; height: 28px; padding: 0 8px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border: 1px solid #5A4E44; border-bottom-width: 3px; font-size: 14px">C</span>
+</a>
+<a href="#" style="height: 52px; box-sizing: border-box; padding: 0 12px 0 42px; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; background: rgba(21, 20, 44, 0.85); border: 2px solid #5C5668; font-size: 22px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase">
+<span>Quit</span>
+<span style="min-width: 28px; height: 28px; padding: 0 8px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border-radius: 5px; background: #2B2420; color: #F3E6C4; border: 1px solid #5A4E44; border-bottom-width: 3px; font-size: 14px; text-transform: none">Esc</span>
+</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":540}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
